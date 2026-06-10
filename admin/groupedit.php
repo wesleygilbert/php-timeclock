@@ -2,6 +2,7 @@
 session_start();
 
 include '../config.inc.php';
+require_once '../functions.php';
 include 'header.php';
 include 'topmain.php';
 echo "<title>$title - Edit Group</title>\n";
@@ -192,7 +193,7 @@ if ($request == 'GET') {
         echo "            </table>\n";
         echo "            <table class=table_border width=90% align=center border=0 cellpadding=0 cellspacing=0>\n";
         echo "              <tr><th class=table_heading nowrap width=3% align=left>&nbsp;</th>\n";
-        echo "                <th class=table_heading nowrap width=23% align=left>Username</th>\n";
+        echo "                <th class=table_heading nowrap width=23% align=left>Name</th>\n";
         echo "                <th class=table_heading nowrap width=23% align=left>Display Name</th>\n";
         echo "                <th class=table_heading nowrap width=28% align=left>Email Address</th>\n";
         echo "                <th class=table_heading width=3% align=center>Disabled</th>\n";
@@ -205,13 +206,14 @@ if ($request == 'GET') {
 
         $row_count = 0;
 
-        $query = "select empfullname, displayname, email, `groups`, office, admin, reports, time_admin, disabled from " . $db_prefix . "employees
+        $query = "select empfullname, first_name, middle_name, last_name, displayname, email, `groups`, office, admin, reports, time_admin, disabled from " . $db_prefix . "employees
           where `groups` = ('" . $get_group . "') and office = ('" . $get_office . "') order by empfullname";
         $result = mysqli_query($db, $query);
 
         while ($row = mysqli_fetch_array($result)) {
 
             $empfullname = stripslashes("" . $row['empfullname'] . "");
+            $employee_name = stripslashes(employee_name_from_row($row));
             $displayname = stripslashes("" . $row['displayname'] . "");
 
             $row_count++;
@@ -219,7 +221,7 @@ if ($request == 'GET') {
 
             echo "              <tr class=table_border bgcolor='$row_color'><td class=table_rows width=3%>&nbsp;$row_count</td>\n";
             echo "                <td class=table_rows width=23%>&nbsp;<a title=\"Edit User: $empfullname\" class=footer_links
-                    href=\"useredit.php?username=$empfullname&officename=" . $row["office"] . "\">$empfullname</a></td>\n";
+                    href=\"useredit.php?username=$empfullname&officename=" . $row["office"] . "\">$employee_name</a></td>\n";
             echo "                <td class=table_rows width=23%>&nbsp;$displayname</td>\n";
             echo "                <td class=table_rows width=28%>&nbsp;" . $row["email"] . "</td>\n";
 
@@ -580,7 +582,7 @@ if ($request == 'GET') {
             echo "            </table>\n";
             echo "            <table class=table_border width=90% align=center border=0 cellpadding=0 cellspacing=0>\n";
             echo "              <tr><th class=table_heading nowrap width=3% align=left>&nbsp;</th>\n";
-            echo "                <th class=table_heading nowrap width=23% align=left>Username</th>\n";
+            echo "                <th class=table_heading nowrap width=23% align=left>Name</th>\n";
             echo "                <th class=table_heading nowrap width=23% align=left>Display Name</th>\n";
             echo "                <th class=table_heading nowrap width=28% align=left>Email Address</th>\n";
             echo "                <th class=table_heading width=3% align=center>Disabled</th>\n";
@@ -593,13 +595,14 @@ if ($request == 'GET') {
 
             $row_count = 0;
 
-            $query = "select empfullname, displayname, email, `groups`, office, admin, reports, time_admin, disabled from " . $db_prefix . "employees
+            $query = "select empfullname, first_name, middle_name, last_name, displayname, email, `groups`, office, admin, reports, time_admin, disabled from " . $db_prefix . "employees
           where `groups` = ('" . $get_group . "') and office = ('" . $get_office . "') order by empfullname";
             $result = mysqli_query($db, $query);
 
             while ($row = mysqli_fetch_array($result)) {
 
                 $empfullname = stripslashes("" . $row['empfullname'] . "");
+            $employee_name = stripslashes(employee_name_from_row($row));
                 $displayname = stripslashes("" . $row['displayname'] . "");
 
                 $row_count++;
@@ -607,7 +610,7 @@ if ($request == 'GET') {
 
                 echo "              <tr class=table_border bgcolor='$row_color'><td class=table_rows width=3%>&nbsp;$row_count</td>\n";
                 echo "                <td class=table_rows width=23%>&nbsp;<a class=footer_links title=\"Edit User: $empfullname\"
-                    href=\"useredit.php?username=$empfullname\">$empfullname</a></td>\n";
+                    href=\"useredit.php?username=$empfullname\">$employee_name</a></td>\n";
                 echo "                <td class=table_rows width=23%>&nbsp;$displayname</td>\n";
                 echo "                <td class=table_rows width=28%>&nbsp;" . $row["email"] . "</td>\n";
 
@@ -735,7 +738,7 @@ if ($request == 'GET') {
             echo "            </table>\n";
             echo "            <table class=table_border width=90% align=center border=0 cellpadding=0 cellspacing=0>\n";
             echo "              <tr><th class=table_heading nowrap width=3% align=left>&nbsp;</th>\n";
-            echo "                <th class=table_heading nowrap width=23% align=left>Username</th>\n";
+            echo "                <th class=table_heading nowrap width=23% align=left>Name</th>\n";
             echo "                <th class=table_heading nowrap width=23% align=left>Display Name</th>\n";
             echo "                <th class=table_heading nowrap width=28% align=left>Email Address</th>\n";
             echo "                <th class=table_heading width=3% align=center>Disabled</th>\n";
@@ -748,13 +751,14 @@ if ($request == 'GET') {
 
             $row_count = 0;
 
-            $query = "select empfullname, displayname, email, `groups`, office, admin, reports, time_admin, disabled from " . $db_prefix . "employees
+            $query = "select empfullname, first_name, middle_name, last_name, displayname, email, `groups`, office, admin, reports, time_admin, disabled from " . $db_prefix . "employees
           where `groups` = ('" . $post_groupname . "') order by empfullname";
             $result = mysqli_query($db, $query);
 
             while ($row = mysqli_fetch_array($result)) {
 
                 $empfullname = stripslashes("" . $row['empfullname'] . "");
+            $employee_name = stripslashes(employee_name_from_row($row));
                 $displayname = stripslashes("" . $row['displayname'] . "");
 
                 $row_count++;
@@ -762,7 +766,7 @@ if ($request == 'GET') {
 
                 echo "              <tr class=table_border bgcolor='$row_color'><td class=table_rows width=3%>&nbsp;$row_count</td>\n";
                 echo "                <td class=table_rows width=24%>&nbsp;<a class=footer_links title=\"Edit User: $empfullname\"
-                    href=\"useredit.php?username=$empfullname\">$empfullname</a></td>\n";
+                    href=\"useredit.php?username=$empfullname\">$employee_name</a></td>\n";
                 echo "                <td class=table_rows width=24%>&nbsp;$displayname</td>\n";
                 echo "                <td class=table_rows width=29%>&nbsp;" . $row["email"] . "</td>\n";
 

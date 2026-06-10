@@ -44,6 +44,9 @@ INSERT INTO dbversion VALUES ('1.4');
 
 CREATE TABLE employees (
   empfullname     VARCHAR(50) NOT NULL DEFAULT '',
+  first_name      VARCHAR(50) NOT NULL DEFAULT '',
+  middle_name     VARCHAR(50) NOT NULL DEFAULT '',
+  last_name       VARCHAR(50) NOT NULL DEFAULT '',
   tstamp          BIGINT DEFAULT NULL,
   employee_passwd VARCHAR(25) NOT NULL DEFAULT '',
   displayname     VARCHAR(50) NOT NULL DEFAULT '',
@@ -62,7 +65,8 @@ CREATE TABLE employees (
 # Dumping data for table `employees`
 #
 
-INSERT INTO employees VALUES ('admin', NULL, 'xy.RY2HT1QTc2', 'administrator', '', '', '', 1, 1, 1, 0);
+INSERT INTO employees (empfullname, first_name, middle_name, last_name, tstamp, employee_passwd, displayname, email, `groups`, office, admin, reports, time_admin, disabled)
+VALUES ('admin', 'admin', '', '', NULL, 'xy.RY2HT1QTc2', 'administrator', '', '', '', 1, 1, 1, 0);
 
 # --------------------------------------------------------
 

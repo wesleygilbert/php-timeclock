@@ -5,6 +5,7 @@ $self = $_SERVER['PHP_SELF'];
 $request = $_SERVER['REQUEST_METHOD'];
 
 include '../config.inc.php';
+require_once '../functions.php';
 if ($request !== 'POST') {
     include 'header_get.php';
     include 'topmain.php';
@@ -76,9 +77,15 @@ if ($request == 'GET') {
     echo "                <th class=rightside_heading nowrap halign=left colspan=3><img src='../images/icons/user_add.png' />&nbsp;&nbsp;&nbsp;Create User
                 </th></tr>\n";
     echo "              <tr><td height=15></td></tr>\n";
-    echo "              <tr><td class=table_rows height=25 width=20% style='padding-left:32px;' nowrap>Username:</td><td colspan=2 width=80%
+    echo "              <tr><td class=table_rows height=25 width=20% style='padding-left:32px;' nowrap>First Name:</td><td colspan=2 width=80%
                       style='color:red;font-family:Tahoma;font-size:10px;padding-left:20px;'>
-                      <input type='text' size='25' maxlength='50' name='post_username'>&nbsp;*</td></tr>\n";
+                      <input type='text' size='25' maxlength='50' name='first_name'>&nbsp;*</td></tr>\n";
+    echo "              <tr><td class=table_rows height=25 width=20% style='padding-left:32px;' nowrap>Middle Name:</td><td colspan=2 width=80%
+                      style='font-family:Tahoma;font-size:10px;padding-left:20px;'>
+                      <input type='text' size='25' maxlength='50' name='middle_name'></td></tr>\n";
+    echo "              <tr><td class=table_rows height=25 width=20% style='padding-left:32px;' nowrap>Last Name:</td><td colspan=2 width=80%
+                      style='color:red;font-family:Tahoma;font-size:10px;padding-left:20px;'>
+                      <input type='text' size='25' maxlength='50' name='last_name'>&nbsp;*</td></tr>\n";
     echo "              <tr><td class=table_rows height=25 width=20% style='padding-left:32px;' nowrap>Display Name:</td><td colspan=2 width=80%
                       style='color:red;font-family:Tahoma;font-size:10px;padding-left:20px;'>
                       <input type='text' size='25' maxlength='50' name='display_name'>&nbsp;*</td></tr>\n";
@@ -123,7 +130,10 @@ if ($request == 'GET') {
     include 'header_post.php';
     include 'topmain.php';
 
-    $post_username = stripslashes($_POST['post_username']);
+    $first_name = stripslashes($_POST['first_name']);
+    $middle_name = stripslashes($_POST['middle_name']);
+    $last_name = stripslashes($_POST['last_name']);
+    $post_username = employee_full_name($first_name, $middle_name, $last_name);
     $display_name = stripslashes($_POST['display_name']);
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
@@ -136,6 +146,9 @@ if ($request == 'GET') {
     $post_disabled = $_POST['disabled'];
 
     $post_username = addslashes($post_username);
+    $first_name = addslashes($first_name);
+    $middle_name = addslashes($middle_name);
+    $last_name = addslashes($last_name);
     $display_name = addslashes($display_name);
 
     $query5 = "select empfullname from " . $db_prefix . "employees where empfullname = '" . $post_username . "' order by empfullname";
@@ -147,13 +160,16 @@ if ($request == 'GET') {
     mysqli_free_result($result5);
 
     $post_username = stripslashes($post_username);
+    $first_name = stripslashes($first_name);
+    $middle_name = stripslashes($middle_name);
+    $last_name = stripslashes($last_name);
     $display_name = stripslashes($display_name);
 
     $string = strstr($post_username, "\"");
     $string2 = strstr($display_name, "\"");
 
     if ((@$tmp_username == $post_username) || ($password !== $confirm_password) ||
-        (!preg_match('/' . "^([[:alnum:]]| |-|'|,)+$" . '/i', $post_username)) || (!preg_match('/' . "^([[:alnum:]]| |-|'|,)+$" . '/i', $display_name)) || (empty($post_username)) ||
+        (!preg_match('/' . "^([[:alnum:]]| |-|'|,)+$" . '/i', $post_username)) || (!preg_match('/' . "^([[:alnum:]]| |-|'|,)+$" . '/i', $display_name)) || (empty($first_name)) || (empty($last_name)) ||
         (empty($display_name)) || (empty($email_addy)) || (empty($office_name)) || (empty($group_name)) ||
         (!preg_match('/' . "^([[:alnum:]]|~|\!|@|#|\$|%|\^|&|\*|\(|\)|-|\+|`|_|\=|[{]|[}]|\[|\]|\||\:|\<|\>|\.|,|\?)+$" . '/i', $password)) ||
         (!preg_match('/' . "^([[:alnum:]]|_|\.|-)+@([[:alnum:]]|\.|-)+(\.)([a-z]{2,4})$" . '/i', $email_addy)) || (($admin_perms != '1') && (!empty($admin_perms))) ||
@@ -212,11 +228,17 @@ if ($request == 'GET') {
 
         // begin post validation //
 
-        if (empty($post_username)) {
+        if (empty($first_name)) {
             echo "            <table align=center class=table_border width=60% border=0 cellpadding=0 cellspacing=3>\n";
             echo "              <tr>\n";
             echo "                <td class=table_rows width=20 align=center><img src='../images/icons/cancel.png' /></td><td class=table_rows_red>
-                    A Username is required.</td></tr>\n";
+                    A First Name is required.</td></tr>\n";
+            echo "            </table>\n";
+        } elseif (empty($last_name)) {
+            echo "            <table align=center class=table_border width=60% border=0 cellpadding=0 cellspacing=3>\n";
+            echo "              <tr>\n";
+            echo "                <td class=table_rows width=20 align=center><img src='../images/icons/cancel.png' /></td><td class=table_rows_red>
+                    A Last Name is required.</td></tr>\n";
             echo "            </table>\n";
         } elseif (empty($display_name)) {
             echo "            <table align=center class=table_border width=60% border=0 cellpadding=0 cellspacing=3>\n";
@@ -228,7 +250,7 @@ if ($request == 'GET') {
             echo "            <table align=center class=table_border width=60% border=0 cellpadding=0 cellspacing=3>\n";
             echo "              <tr>\n";
             echo "                <td class=table_rows width=20 align=center><img src='../images/icons/cancel.png' /></td><td class=table_rows_red>
-                    Double Quotes are not allowed when creating an Username.</td></tr>\n";
+                    Double Quotes are not allowed when creating a name.</td></tr>\n";
             echo "            </table>\n";
         } elseif (!empty($string2)) {
             echo "            <table align=center class=table_border width=60% border=0 cellpadding=0 cellspacing=3>\n";
@@ -258,13 +280,13 @@ if ($request == 'GET') {
             echo "            <table align=center class=table_border width=60% border=0 cellpadding=0 cellspacing=3>\n";
             echo "              <tr>\n";
             echo "                <td class=table_rows width=20 align=center><img src='../images/icons/cancel.png' /></td><td class=table_rows_red>
-                    User already exists. Create another username.</td></tr>\n";
+                    User already exists. Create another name.</td></tr>\n";
             echo "            </table>\n";
         } elseif (!preg_match('/' . "^([[:alnum:]]| |-|'|,)+$" . '/i', $post_username)) {
             echo "            <table align=center class=table_border width=60% border=0 cellpadding=0 cellspacing=3>\n";
             echo "              <tr>\n";
             echo "                <td class=table_rows width=20 align=center><img src='../images/icons/cancel.png' /></td><td class=table_rows_red>
-                    Alphanumeric characters, hyphens, apostrophes, commas, and spaces are allowed when creating a Username.</td></tr>\n";
+                    Alphanumeric characters, hyphens, apostrophes, commas, and spaces are allowed when creating a name.</td></tr>\n";
             echo "            </table>\n";
         } elseif (!preg_match('/' . "^([[:alnum:]]| |-|'|,)+$" . '/i', $display_name)) {
             echo "            <table align=center class=table_border width=60% border=0 cellpadding=0 cellspacing=3>\n";
@@ -362,15 +384,24 @@ if ($request == 'GET') {
         echo "                <th class=rightside_heading nowrap halign=left colspan=3><img src='../images/icons/user_add.png' />&nbsp;&nbsp;&nbsp;Create User
                 </th></tr>\n";
         echo "              <tr><td height=15></td></tr>\n";
-        echo "              <tr><td class=table_rows  height=25 width=20% style='padding-left:32px;' nowrap>Username:</td><td colspan=2 width=80%
+        echo "              <tr><td class=table_rows  height=25 width=20% style='padding-left:32px;' nowrap>First Name:</td><td colspan=2 width=80%
                       style='color:red;font-family:Tahoma;font-size:11px;padding-left:20px;'>
-                      <input type='text' size='25' maxlength='50' name='post_username' value=\"$post_username\">&nbsp;*</td></tr>\n";
+                      <input type='text' size='25' maxlength='50' name='first_name' value=\"$first_name\">&nbsp;*</td></tr>\n";
+        echo "              <tr><td class=table_rows height=25 width=20% style='padding-left:32px;' nowrap>Middle Name:</td><td colspan=2 width=80%
+                      style='font-family:Tahoma;font-size:11px;padding-left:20px;'>
+                      <input type='text' size='25' maxlength='50' name='middle_name' value=\"$middle_name\"></td></tr>\n";
+        echo "              <tr><td class=table_rows height=25 width=20% style='padding-left:32px;' nowrap>Last Name:</td><td colspan=2 width=80%
+                      style='color:red;font-family:Tahoma;font-size:11px;padding-left:20px;'>
+                      <input type='text' size='25' maxlength='50' name='last_name' value=\"$last_name\">&nbsp;*</td></tr>\n";
         echo "              <tr><td class=table_rows height=25 width=20% style='padding-left:32px;' nowrap>Display Name:</td><td colspan=2 width=80%
                       style='color:red;font-family:Tahoma;font-size:11px;padding-left:20px;'>
                       <input type='text' size='25' maxlength='50' name='display_name' value=\"$display_name\">&nbsp;*</td></tr>\n";
 
         if (!empty($string)) {
             $post_username = addslashes($post_username);
+            $first_name = addslashes($first_name);
+            $middle_name = addslashes($middle_name);
+            $last_name = addslashes($last_name);
         }
         if (!empty($string2)) {
             $displayname = addslashes($display_name);
@@ -439,13 +470,16 @@ if ($request == 'GET') {
     }
 
     $post_username = addslashes($post_username);
+    $first_name = addslashes($first_name);
+    $middle_name = addslashes($middle_name);
+    $last_name = addslashes($last_name);
     $display_name = addslashes($display_name);
 
     $password = crypt($password, 'xy');
     $confirm_password = crypt($confirm_password, 'xy');
 
-    $query3 = "insert into " . $db_prefix . "employees (empfullname, displayname, employee_passwd, email, `groups`, office, admin, reports, time_admin, disabled)
-           values ('" . $post_username . "', '" . $display_name . "', '" . $password . "', '" . $email_addy . "', '" . $group_name . "', '" . $office_name . "', '" . $admin_perms . "',
+    $query3 = "insert into " . $db_prefix . "employees (empfullname, first_name, middle_name, last_name, displayname, employee_passwd, email, `groups`, office, admin, reports, time_admin, disabled)
+           values ('" . $post_username . "', '" . $first_name . "', '" . $middle_name . "', '" . $last_name . "', '" . $display_name . "', '" . $password . "', '" . $email_addy . "', '" . $group_name . "', '" . $office_name . "', '" . $admin_perms . "',
            '" . $reports_perms . "', '" . $time_admin_perms . "', '" . $post_disabled . "')";
     $result3 = mysqli_query($db, $query3);
 
@@ -505,7 +539,7 @@ if ($request == 'GET') {
                 </th></tr>\n";
     echo "              <tr><td height=15></td></tr>\n";
 
-    $query4 = "select empfullname, displayname, email, `groups`, office, admin, reports, time_admin, disabled from " . $db_prefix . "employees
+    $query4 = "select empfullname, first_name, middle_name, last_name, displayname, email, `groups`, office, admin, reports, time_admin, disabled from " . $db_prefix . "employees
 	  where empfullname = '" . $post_username . "'
           order by empfullname";
     $result4 = mysqli_query($db, $query4);
@@ -513,6 +547,9 @@ if ($request == 'GET') {
     while ($row = mysqli_fetch_array($result4)) {
 
         $username = stripslashes("" . $row['empfullname'] . "");
+        $first_name = stripslashes("" . $row['first_name'] . "");
+        $middle_name = stripslashes("" . $row['middle_name'] . "");
+        $last_name = stripslashes("" . $row['last_name'] . "");
         $displayname = stripslashes("" . $row['displayname'] . "");
         $user_email = "" . $row['email'] . "";
         $office = "" . $row['office'] . "";
@@ -524,8 +561,12 @@ if ($request == 'GET') {
     }
     mysqli_free_result($result4);
 
-    echo "              <tr><td class=table_rows height=25 width=20% style='padding-left:32px;' nowrap>Username:</td><td align=left class=table_rows
-                      colspan=2 width=80% style='padding-left:20px;'>$username</td></tr>\n";
+    echo "              <tr><td class=table_rows height=25 width=20% style='padding-left:32px;' nowrap>First Name:</td><td align=left class=table_rows
+                      colspan=2 width=80% style='padding-left:20px;'>$first_name</td></tr>\n";
+    echo "              <tr><td class=table_rows height=25 width=20% style='padding-left:32px;' nowrap>Middle Name:</td><td align=left class=table_rows
+                      colspan=2 width=80% style='padding-left:20px;'>$middle_name</td></tr>\n";
+    echo "              <tr><td class=table_rows height=25 width=20% style='padding-left:32px;' nowrap>Last Name:</td><td align=left class=table_rows
+                      colspan=2 width=80% style='padding-left:20px;'>$last_name</td></tr>\n";
     echo "              <tr><td class=table_rows height=25 width=20% style='padding-left:32px;' nowrap>Display Name:</td><td align=left class=table_rows
                       colspan=2 width=80% style='padding-left:20px;'>$displayname</td></tr>\n";
     echo "              <tr><td class=table_rows height=25 width=20% style='padding-left:32px;' nowrap>Password:</td><td align=left class=table_rows

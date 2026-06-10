@@ -27,6 +27,10 @@ if (!function_exists('timeclock_mysqli_link')) {
     }
 }
 
+if (function_exists('mysqli_report')) {
+    mysqli_report(MYSQLI_REPORT_OFF);
+}
+
 if (!function_exists('mysql_connect')) {
     function mysql_connect($server = null, $username = null, $password = null) {
         global $db, $db_hostname, $db_username, $db_password, $db_name;

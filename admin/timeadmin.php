@@ -6,6 +6,7 @@ $request = $_SERVER['REQUEST_METHOD'];
 $user_agent = $_SERVER['HTTP_USER_AGENT'];
 
 include '../config.inc.php';
+require_once '../functions.php';
 include 'header.php';
 include 'topmain.php';
 echo "<title>$title - Add/Edit/Delete Time</title>\n";
@@ -72,7 +73,7 @@ echo "            </table>\n";
 echo "            <table class=table_border width=90% align=center border=0 cellpadding=0 cellspacing=0>\n";
 echo "              <tr>\n";
 echo "                <th class=table_heading nowrap width=7% align=left>&nbsp;</th>\n";
-echo "                <th class=table_heading nowrap width=17% align=left>Username</th>\n";
+echo "                <th class=table_heading nowrap width=17% align=left>Name</th>\n";
 echo "                <th class=table_heading nowrap width=17% align=left>Display Name</th>\n";
 echo "                <th class=table_heading nowrap width=17% align=left>Office</th>\n";
 echo "                <th class=table_heading width=33% align=left>Group</th>\n";
@@ -84,13 +85,14 @@ echo "              </tr>\n";
 
 $row_count = 0;
 
-$query = "select empfullname, displayname, email, `groups`, office, admin, reports, disabled from " . $db_prefix . "employees
+$query = "select empfullname, first_name, middle_name, last_name, displayname, email, `groups`, office, admin, reports, disabled from " . $db_prefix . "employees
           order by empfullname";
 $result = mysqli_query($db, $query);
 
 while ($row = mysqli_fetch_array($result)) {
 
     $empfullname = stripslashes("" . $row['empfullname'] . "");
+    $employee_name = stripslashes(employee_name_from_row($row));
     $displayname = stripslashes("" . $row['displayname'] . "");
 
     $row_count++;
@@ -98,7 +100,7 @@ while ($row = mysqli_fetch_array($result)) {
 
     echo "              <tr class=table_border bgcolor='$row_color'><td nowrap class=table_rows width=7%>&nbsp;$row_count</td>\n";
     echo "                <td nowrap class=table_rows width=17%>&nbsp;<a title=\"Edit Time For: $empfullname\" class=footer_links
-                    href=\"timeedit.php?username=$empfullname\">$empfullname</a></td>\n";
+                    href=\"timeedit.php?username=$empfullname\">$employee_name</a></td>\n";
     echo "                <td nowrap class=table_rows width=17%>&nbsp;$displayname</td>\n";
     echo "                <td nowrap class=table_rows width=17%>&nbsp;" . $row['office'] . "</td>\n";
     echo "                <td class=table_rows width=33%>&nbsp;" . $row['groups'] . "</td>\n";

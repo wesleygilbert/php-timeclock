@@ -2,6 +2,7 @@
 session_start();
 
 include '../config.inc.php';
+require_once '../functions.php';
 include 'header.php';
 include 'topmain.php';
 echo "<title>$title - Upgrade Database</title>\n";
@@ -166,6 +167,41 @@ if (!empty($count)) {
             echo "              <tr><td width=10 class=table_rows style='padding-left:25px;color:#FF9900;font-weight:bold;'>Added</td><td class=table_rows
                       align=left>:&nbsp;<b>$field</b> field has been added to the <u>employees</u> table.</td></tr>\n";
             $passed_or_not = "1";
+        }
+
+        $employee_name_fields_added = false;
+        $employee_name_fields = array(
+            'first_name' => "AFTER empfullname",
+            'middle_name' => "AFTER first_name",
+            'last_name' => "AFTER middle_name"
+        );
+
+        foreach ($employee_name_fields as $field => $position) {
+            $result = mysqli_query($db, "SHOW fields from " . $db_prefix . "employees LIKE '" . $field . "'");
+            @$rows = mysqli_num_rows($result);
+
+            if (empty($rows)) {
+                $name_query = mysqli_query($db, "ALTER TABLE " . $db_prefix . "employees ADD $field VARCHAR(50) NOT NULL DEFAULT '' " . $position . ";");
+                echo "              <tr><td width=10 class=table_rows style='padding-left:25px;color:#FF9900;font-weight:bold;'>Added</td><td class=table_rows
+                      align=left>:&nbsp;<b>$field</b> field has been added to the <u>employees</u> table.</td></tr>\n";
+                $employee_name_fields_added = true;
+                $passed_or_not = "1";
+            }
+        }
+
+        if ($employee_name_fields_added) {
+            $name_result = mysqli_query($db, "SELECT empfullname FROM " . $db_prefix . "employees WHERE first_name = '' AND middle_name = '' AND last_name = ''");
+            while ($name_row = mysqli_fetch_array($name_result)) {
+                list($first_name, $middle_name, $last_name) = employee_split_full_name($name_row['empfullname']);
+                $update_name_query = mysqli_query($db, "UPDATE " . $db_prefix . "employees
+                    SET first_name = '" . addslashes($first_name) . "',
+                        middle_name = '" . addslashes($middle_name) . "',
+                        last_name = '" . addslashes($last_name) . "'
+                    WHERE empfullname = '" . addslashes($name_row['empfullname']) . "'");
+            }
+            mysqli_free_result($name_result);
+            echo "              <tr><td width=10 class=table_rows style='padding-left:25px;color:#FF9900;font-weight:bold;'>Updated</td><td class=table_rows
+                      align=left>:&nbsp;Existing employee names have been split into first, middle, and last name fields.</td></tr>\n";
         }
 
         $field = "displayname";
@@ -467,7 +503,8 @@ if (!empty($count)) {
 
                 if (!isset($admin_user)) {
                     $add_admin_query = mysqli_query($db, "INSERT INTO " . $db_prefix . "employees
-                                            VALUES ('admin', NULL, 'xy.RY2HT1QTc2', 'administrator', '', '', '', 1, 1, 1, '');");
+                                            (empfullname, first_name, middle_name, last_name, tstamp, employee_passwd, displayname, email, `groups`, office, admin, reports, time_admin, disabled)
+                                            VALUES ('admin', 'admin', '', '', NULL, 'xy.RY2HT1QTc2', 'administrator', '', '', '', 1, 1, 1, 0);");
 
                     echo "              <tr><td width=10 class=table_rows style='padding-left:25px;color:#FF9900;font-weight:bold;'>Added</td><td class=table_rows
                                   align=left>:&nbsp;<b>$admin</b> user has been added to the <u>$db_name</u> database.</td></tr>\n";

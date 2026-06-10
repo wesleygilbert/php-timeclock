@@ -3,6 +3,7 @@
 session_start();
 
 include '../config.inc.php';
+require_once '../functions.php';
 include 'header.php';
 include 'topmain.php';
 echo "<title>$title - User Summary</title>\n";
@@ -92,7 +93,7 @@ echo "            </table>\n";
 echo "            <table class=table_border width=90% align=center border=0 cellpadding=0 cellspacing=0>\n";
 echo "              <tr>\n";
 echo "                <th class=table_heading nowrap width=3% align=left>&nbsp;</th>\n";
-echo "                <th class=table_heading nowrap width=13% align=left>Username</th>\n";
+echo "                <th class=table_heading nowrap width=13% align=left>Name</th>\n";
 echo "                <th class=table_heading nowrap width=18% align=left>Display Name</th>\n";
 //echo "                <th class=table_heading nowrap width=23% align=left>Email Address</th>\n";
 echo "                <th class=table_heading nowrap width=10% align=left>Office</th>\n";
@@ -108,13 +109,14 @@ echo "              </tr>\n";
 
 $row_count = 0;
 
-$query = "select empfullname, displayname, email, `groups`, office, admin, reports, time_admin, disabled from " . $db_prefix . "employees
+$query = "select empfullname, first_name, middle_name, last_name, displayname, email, `groups`, office, admin, reports, time_admin, disabled from " . $db_prefix . "employees
           order by empfullname";
 $result = mysqli_query($db, $query);
 
 while ($row = mysqli_fetch_array($result)) {
 
 $empfullname = stripslashes("" . $row['empfullname'] . "");
+$employee_name = stripslashes(employee_name_from_row($row));
 $displayname = stripslashes("" . $row['displayname'] . "");
 
 $row_count++;
@@ -122,7 +124,7 @@ $row_color = ($row_count % 2) ? $color2 : $color1;
 
 echo "              <tr class=table_border bgcolor='$row_color'><td nowrap class=table_rows width=3%>&nbsp;$row_count</td>\n";
 echo "                <td class=table_rows nowrap width=13%>&nbsp;<a title=\"Edit User: $empfullname\" class=footer_links 
-                    href=\"useredit.php?username=$empfullname&officename=" . $row["office"] . "\">$empfullname</a></td>\n";
+                    href=\"useredit.php?username=$empfullname&officename=" . $row["office"] . "\">$employee_name</a></td>\n";
 echo "                <td class=table_rows nowrap width=18%>&nbsp;$displayname</td>\n";
 //echo "                <td class=table_rows nowrap width=23%>&nbsp;".$row["email"]."</td>\n";
 echo "

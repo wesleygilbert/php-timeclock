@@ -5,6 +5,7 @@ $self = $_SERVER['PHP_SELF'];
 $request = $_SERVER['REQUEST_METHOD'];
 
 include '../config.inc.php';
+require_once '../functions.php';
 if ($request !== 'POST') {
     include 'header_get.php';
     include 'topmain.php';
@@ -77,7 +78,7 @@ if ($request !== 'POST') {
                 </th>\n";
     echo "              </tr>\n";
     echo "              <tr><td height=15></td></tr>\n";
-    echo "              <tr><td class=table_rows height=25 width=20% style='padding-left:32px;' nowrap>Username:</td><td colspan=2 width=80%
+    echo "              <tr><td class=table_rows height=25 width=20% style='padding-left:32px;' nowrap>Name:</td><td colspan=2 width=80%
                       style='color:red;font-family:Tahoma;font-size:10px;padding-left:20px;'><input type='text' 
                       size='25' maxlength='50' name='post_username' 
                       onFocus=\"javascript:form.display_name.disabled=true;form.email_addy.disabled=true;
@@ -184,7 +185,7 @@ if (!preg_match('/' . "^([[:alnum:]]| |-|'|,)+$" . '/i', $post_username)) {
         echo "            <table align=center class=table_border width=60% border=0 cellpadding=0 cellspacing=3>\n";
         echo "              <tr>\n";
         echo "                <td class=table_rows width=20 align=center><img src='../images/icons/cancel.png' /></td><td class=table_rows_red nowrap>
-                    &nbsp;Alphanumeric characters, hyphens, apostrophes, commas, and spaces are allowed when searching for a Username.</td></tr>\n";
+                    &nbsp;Alphanumeric characters, hyphens, apostrophes, commas, and spaces are allowed when searching for a Name.</td></tr>\n";
         echo "            </table>\n";
         $evil_input = "1";
     }
@@ -218,7 +219,7 @@ if (($post_username == "") && ($display_name == "") && ($email_addy == "")) {
     echo "            <table align=center class=table_border width=60% border=0 cellpadding=0 cellspacing=3>\n";
     echo "              <tr>\n";
     echo "                <td class=table_rows width=20 align=center><img src='../images/icons/cancel.png' /></td><td class=table_rows_red nowrap>
-                    &nbsp;A Username, Display Name, or Email Address is required.</td></tr>\n";
+                    &nbsp;A Name, Display Name, or Email Address is required.</td></tr>\n";
     echo "            </table>\n";
     $evil_input = "1";
 }
@@ -260,7 +261,7 @@ if (isset($evil_input)) {
     echo "                <th class=rightside_heading nowrap halign=left colspan=3><img src='../images/icons/magnifier.png' />&nbsp;&nbsp;&nbsp;Search for User
                 </th></tr>\n";
     echo "              <tr><td height=15></td></tr>\n";
-    echo "              <tr><td class=table_rows height=25 width=20% style='padding-left:32px;' nowrap>Username:</td><td colspan=2 width=80%
+    echo "              <tr><td class=table_rows height=25 width=20% style='padding-left:32px;' nowrap>Name:</td><td colspan=2 width=80%
                       style='color:red;font-family:Tahoma;font-size:10px;padding-left:20px;'><input type='text' style='color:red;' size='25' maxlength='50' 
                       name='post_username' value='$post_username' 
                       onFocus=\"javascript:form.display_name.disabled=true;form.email_addy.disabled=true;
@@ -304,21 +305,22 @@ $group_name = addslashes($group_name);
 
 if (!empty($post_username)) {
     $tmp_var = $post_username;
-    $tmp_var2 = "Username";
+    $tmp_var2 = "Name";
+    $name_search = "(empfullname LIKE '%" . $post_username . "%' or first_name LIKE '%" . $post_username . "%' or middle_name LIKE '%" . $post_username . "%' or last_name LIKE '%" . $post_username . "%' or concat(first_name, ' ', middle_name, ' ', last_name) LIKE '%" . $post_username . "%')";
 
     if ((!empty($office_name)) && (!empty($group_name))) {
-        $query4 = "select empfullname, displayname, email, `groups`, office, admin, reports, time_admin, disabled from " . $db_prefix . "employees
-            where empfullname LIKE '%" . $post_username . "%' and office = '" . $office_name . "' and `groups` = '" . $group_name . "'
+        $query4 = "select empfullname, first_name, middle_name, last_name, displayname, email, `groups`, office, admin, reports, time_admin, disabled from " . $db_prefix . "employees
+            where " . $name_search . " and office = '" . $office_name . "' and `groups` = '" . $group_name . "'
             order by empfullname";
         $result4 = mysqli_query($db, $query4);
     } elseif (!empty($office_name)) {
-        $query4 = "select empfullname, displayname, email, `groups`, office, admin, reports, time_admin, disabled from " . $db_prefix . "employees
-            where empfullname LIKE '%" . $post_username . "%' and office = '" . $office_name . "'
+        $query4 = "select empfullname, first_name, middle_name, last_name, displayname, email, `groups`, office, admin, reports, time_admin, disabled from " . $db_prefix . "employees
+            where " . $name_search . " and office = '" . $office_name . "'
             order by empfullname";
         $result4 = mysqli_query($db, $query4);
     } elseif (empty($office_name)) {
-        $query4 = "select empfullname, displayname, email, `groups`, office, admin, reports, time_admin, disabled from " . $db_prefix . "employees
-            where empfullname LIKE '%" . $post_username . "%'
+        $query4 = "select empfullname, first_name, middle_name, last_name, displayname, email, `groups`, office, admin, reports, time_admin, disabled from " . $db_prefix . "employees
+            where " . $name_search . "
             order by empfullname";
         $result4 = mysqli_query($db, $query4);
     }
@@ -327,17 +329,17 @@ if (!empty($post_username)) {
     $tmp_var2 = "Display Name";
 
     if ((!empty($office_name)) && (!empty($group_name))) {
-        $query4 = "select empfullname, displayname, email, `groups`, office, admin, reports, time_admin, disabled from " . $db_prefix . "employees
+        $query4 = "select empfullname, first_name, middle_name, last_name, displayname, email, `groups`, office, admin, reports, time_admin, disabled from " . $db_prefix . "employees
             where displayname LIKE '%" . $display_name . "%' and office = '" . $office_name . "' and `groups` = '" . $group_name . "'
             order by empfullname";
         $result4 = mysqli_query($db, $query4);
     } elseif (!empty($office_name)) {
-        $query4 = "select empfullname, displayname, email, `groups`, office, admin, reports, time_admin, disabled from " . $db_prefix . "employees
+        $query4 = "select empfullname, first_name, middle_name, last_name, displayname, email, `groups`, office, admin, reports, time_admin, disabled from " . $db_prefix . "employees
             where displayname LIKE '%" . $display_name . "%' and office = '" . $office_name . "'
             order by empfullname";
         $result4 = mysqli_query($db, $query4);
     } elseif (empty($office_name)) {
-        $query4 = "select empfullname, displayname, email, `groups`, office, admin, reports, time_admin, disabled from " . $db_prefix . "employees
+        $query4 = "select empfullname, first_name, middle_name, last_name, displayname, email, `groups`, office, admin, reports, time_admin, disabled from " . $db_prefix . "employees
             where displayname LIKE '%" . $display_name . "%'
             order by empfullname";
         $result4 = mysqli_query($db, $query4);
@@ -347,17 +349,17 @@ if (!empty($post_username)) {
     $tmp_var2 = "Email Address";
 
     if ((!empty($office_name)) && (!empty($group_name))) {
-        $query4 = "select empfullname, displayname, email, `groups`, office, admin, reports, time_admin, disabled from " . $db_prefix . "employees
+        $query4 = "select empfullname, first_name, middle_name, last_name, displayname, email, `groups`, office, admin, reports, time_admin, disabled from " . $db_prefix . "employees
             where email LIKE '%" . $email_addy . "%' and office = '" . $office_name . "' and `groups` = '" . $group_name . "'
             order by empfullname";
         $result4 = mysqli_query($db, $query4);
     } elseif (!empty($office_name)) {
-        $query4 = "select empfullname, displayname, email, `groups`, office, admin, reports, time_admin, disabled from " . $db_prefix . "employees
+        $query4 = "select empfullname, first_name, middle_name, last_name, displayname, email, `groups`, office, admin, reports, time_admin, disabled from " . $db_prefix . "employees
             where email LIKE '%" . $email_addy . "%' and office = '" . $office_name . "'
             order by empfullname";
         $result4 = mysqli_query($db, $query4);
     } elseif (empty($office_name)) {
-        $query4 = "select empfullname, displayname, email, `groups`, office, admin, reports, time_admin, disabled from " . $db_prefix . "employees
+        $query4 = "select empfullname, first_name, middle_name, last_name, displayname, email, `groups`, office, admin, reports, time_admin, disabled from " . $db_prefix . "employees
             where email LIKE '%" . $email_addy . "%'
             order by empfullname";
         $result4 = mysqli_query($db, $query4);
@@ -385,7 +387,7 @@ if ($row_count == "1") {
     echo "            <table class=table_border width=90% align=center border=0 cellpadding=0 cellspacing=0>\n";
     echo "              <tr>\n";
     echo "                <th class=table_heading nowrap width=3% align=left>&nbsp;</th>\n";
-    echo "                <th class=table_heading nowrap width=13% align=left>Username</th>\n";
+    echo "                <th class=table_heading nowrap width=13% align=left>Name</th>\n";
     echo "                <th class=table_heading nowrap width=18% align=left>Display Name</th>\n";
     //echo "                <th class=table_heading nowrap width=23% align=left>Email Address</th>\n";
     echo "                <th class=table_heading nowrap width=10% align=left>Office</th>\n";
@@ -402,11 +404,12 @@ if ($row_count == "1") {
 
 $row_color = ($row_count % 2) ? $color2 : $color1;
 $empfullname = stripslashes("" . $row['empfullname'] . "");
+$employee_name = stripslashes(employee_name_from_row($row));
 $displayname = stripslashes("" . $row['displayname'] . "");
 
 echo "              <tr class=table_border bgcolor='$row_color'><td class=table_rows width=3%>&nbsp;$row_count</td>\n";
 echo "                <td class=table_rows width=13%>&nbsp;<a class=footer_links title=\"Edit User: $empfullname\"
-                    href=\"useredit.php?username=$empfullname&officename=" . $row["office"] . "\">$empfullname</a></td>\n";
+                    href=\"useredit.php?username=$empfullname&officename=" . $row["office"] . "\">$employee_name</a></td>\n";
 echo "                <td class=table_rows width=18%>$displayname</td>\n";
 //echo "                <td class=table_rows width=23%>".$row["email"]."</td>\n";
 echo "<td class=table_rows width=10%>".$row['office']."</td>\n";
@@ -500,7 +503,7 @@ echo "
         \n";
         echo "
         <tr>
-            <td class=table_rows height=25 width=20% style='padding-left:32px;' nowrap>Username:</td>
+            <td class=table_rows height=25 width=20% style='padding-left:32px;' nowrap>Name:</td>
             <td colspan=2 width=80%
                 style='color:red;font-family:Tahoma;font-size:10px;padding-left:20px;'><input type='text'
                                                                                               style='color:red;'
