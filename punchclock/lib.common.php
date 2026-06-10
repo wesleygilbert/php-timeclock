@@ -20,7 +20,7 @@ function unmake_id($id) {
 ////////////////////////////////////////
 function lookup_employee($empfullname) {
     // Return valid empfullname or null
-    global $db_prefix;
+    global $db, $db_prefix;
     $name = null;
     $q_empfullname = mysql_real_escape_string($empfullname);
     $result = mysqli_query($db, "SELECT empfullname FROM {$db_prefix}employees WHERE empfullname = '$q_empfullname'");
@@ -41,7 +41,7 @@ function lookup_employee($empfullname) {
 
 ////////////////////////////////////////
 function get_employee_name($empfullname) {
-    global $db_prefix;
+    global $db, $db_prefix;
     $q_empfullname = mysql_real_escape_string($empfullname);
     $result = mysqli_query($db, "SELECT displayname FROM {$db_prefix}employees WHERE empfullname = '$q_empfullname'");
     if (!$result) {
@@ -57,7 +57,7 @@ function get_employee_name($empfullname) {
 
 ////////////////////////////////////////
 function get_employee_password($empfullname) {
-    global $db_prefix;
+    global $db, $db_prefix;
     $q_empfullname = mysql_real_escape_string($empfullname);
     $result = mysqli_query($db, "SELECT employee_passwd FROM {$db_prefix}employees WHERE empfullname = '$q_empfullname'");
     if (!$result) {
@@ -84,7 +84,7 @@ function is_valid_password($empfullname, $password) {
 
 ////////////////////////////////////////
 function save_employee_password($empfullname, $new_password) {
-    global $db_prefix;
+    global $db, $db_prefix;
     $password = crypt($new_password, 'xy');
     $q_empfullname = mysql_real_escape_string($empfullname);
     $q_password = mysql_real_escape_string($password);
@@ -103,7 +103,7 @@ function save_employee_password($empfullname, $new_password) {
 function get_employee_status($empfullname) {
     // Get employee's current punch-in/out status and time.
     // Return array of in/out(1/0), punch code, timestamp, and notes.
-    global $db_prefix;
+    global $db, $db_prefix;
     $q_empfullname = mysql_real_escape_string($empfullname);
     $query = <<<End_Of_SQL
 select {$db_prefix}employees.*, {$db_prefix}info.*, {$db_prefix}punchlist.*

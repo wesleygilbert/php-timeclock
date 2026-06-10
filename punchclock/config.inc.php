@@ -117,6 +117,7 @@ $default_in_or_out = 1;
 
 // Get the timeclock configuration variables.
 include "$TIMECLOCK_PATH/config.inc.php";
+require_once "$TIMECLOCK_PATH/compat.php";
 
 // Time constants
 $one_day = (24 * 60 * 60); // number of timestamp units (seconds) in a day

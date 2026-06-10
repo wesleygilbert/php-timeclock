@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/compat.php';
+
 /*
 ****************************************************************************
 Be sure to set appropriate permissions on this file as it contains sensitive

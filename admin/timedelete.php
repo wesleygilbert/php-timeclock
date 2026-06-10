@@ -2,6 +2,7 @@
 session_start();
 
 include '../config.inc.php';
+require_once '../compat.php';
 include 'header_date.php';
 include 'topmain.php';
 echo "<title>$title - Delete Time</title>\n";

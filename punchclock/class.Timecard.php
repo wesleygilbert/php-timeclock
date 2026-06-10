@@ -25,10 +25,14 @@ class Timecard {
     var $overtime_hours; // sum of overtime hours
     var $total_hours; // total of regular hours and overtime hours
 
-    function Timecard($empfullname, $begin_local_timestamp, $end_local_timestamp) {
+    function __construct($empfullname, $begin_local_timestamp, $end_local_timestamp) {
         $this->empfullname = $empfullname;
         $this->begin_local_timestamp = $begin_local_timestamp;
         $this->end_local_timestamp = $end_local_timestamp;
+    }
+
+    function Timecard($empfullname, $begin_local_timestamp, $end_local_timestamp) {
+        $this->__construct($empfullname, $begin_local_timestamp, $end_local_timestamp);
     }
 
     function tally() {
@@ -49,13 +53,16 @@ class Timecard {
         // 3) total overtime hours, and 4) total hours worked today.
 
         // Configuration variables.
+        global $db;
         global $show_display_name, $timefmt, $datefmt;
         global $overtime_week_limit, $timecard_list_punch_outs, $timecard_punchitem;
 
         // Initialize totals
         $this->week_hours = 0;
         $this->overtime_hours = 0;
+        $this->total_hours = 0;
         $this->today_hours = null; // not used unless week includes today
+        $do_today_hours = false;
 
         // Set flag to tally today's hours if within current week.
         $local_timestamp = local_timestamp(); // current time

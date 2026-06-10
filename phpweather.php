@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/compat.php';
+
 ////////////////////////////////////////////
 /* Copied from PHP Weather version 1.62.  */
 /* Line 109 was added for php timeclock.  */
@@ -58,6 +60,16 @@ if ($db = mysqli_connect($db_hostname, $db_username, $db_password)) {
     echo "<p>Unable to connect to MySQL database!</p>";
 }
 
+function store_temp($value, &$decoded_metar, $celsius_key, $fahrenheit_key) {
+    $temp = (int)substr($value, 1) / 10;
+    if ($value[0] == '1') {
+        $temp *= -1;
+    }
+
+    $decoded_metar[$celsius_key] = number_format($temp, 1);
+    $decoded_metar[$fahrenheit_key] = number_format($temp * (9 / 5) + 32, 1);
+}
+
 function store_speed($value, $windunit, &$meterspersec, &$knots, &$milesperhour) {
     /*
      * Helper function to convert and store speed based on unit.
@@ -102,7 +114,7 @@ function get_metar($station, $always_use_cache = 0) {
      * Aalborg, Denmark.
      */
 
-    global $conn, $dbmMetar, $dbmTimestamp, $db_prefix;
+    global $db, $db_prefix;
 
     $query = "SELECT metar, UNIX_TIMESTAMP(timestamp) FROM " . $db_prefix . "metars WHERE station = '$station'";
     $result = mysqli_query($db, $query);
@@ -132,7 +144,7 @@ function fetch_metar($station, $new) {
      * is true, the metar is inserted, else it will replace the old
      * metar. The new METAR is returned.
      */
-    global $conn, $dbmMetar, $dbmTimestamp;
+    global $db, $db_prefix;
 
     $metar = '';
     $station = strtoupper($station);
@@ -146,7 +158,7 @@ function fetch_metar($station, $new) {
         $date = trim($file[0]);
         $metar = trim($file[1]);
         for ($i = 2; $i < count($file); $i++) {
-            $metar .= ' ' . trim($file[i]);
+            $metar .= ' ' . trim($file[$i]);
         }
 
         /* The date is in the form 2000/10/09 14:50 UTC. This seperates

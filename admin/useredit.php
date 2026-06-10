@@ -5,6 +5,7 @@ $self = $_SERVER['PHP_SELF'];
 $request = $_SERVER['REQUEST_METHOD'];
 
 include '../config.inc.php';
+require_once '../compat.php';
 if ($request !== 'POST') {
     include 'header_get.php';
     include 'topmain.php';

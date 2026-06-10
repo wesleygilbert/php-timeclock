@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/compat.php';
+
 function secsToHours($secs, $round_time) {
 
     /* The logic for this function was written by Adam Woodbeck, who initially wrote it to round to the
@@ -304,12 +306,6 @@ function setTimeZone() {
         $tzo = date('Z');
     } else {
         $tzo = 0;
-    }
-}
-
-if (!function_exists('get_magic_quotes_gpc')) {
-    function get_magic_quotes_gpc() {
-        return false; // or return true if you need to simulate the behavior
     }
 }
 

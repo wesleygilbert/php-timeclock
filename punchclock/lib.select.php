@@ -32,8 +32,8 @@ function select_options($arg, $val = null) {
     if (is_array($arg))
         return _select_options_arr($arg, $lookup);
     $html = ''; // initialize return string
-    $db = isset($GLOBALS['db']) ? $GLOBALS['db'] : null;
-    $result = mysqli_query($db, $arg, $db);
+    $db = isset($GLOBALS['db']) ? $GLOBALS['db'] : timeclock_mysqli_link();
+    $result = mysqli_query($db, $arg);
     while ($row = mysql_fetch_row($result)) {
         if (count($row) < 2)
             $row[1] = $row[0];
