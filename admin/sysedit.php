@@ -970,7 +970,7 @@ if ($request == 'GET') {
                              <select name='group_name'>
                           <option value = 'all'>all</option>\n";
 
-        $query = "select DISTINCT(groupname) from groups order by groupname asc";
+        $query = "select DISTINCT(groupname) from `groups` order by groupname asc";
         $result = mysqli_query($db, $query);
 
         while ($row = mysqli_fetch_array($result)) {
@@ -1328,7 +1328,7 @@ if ($request == 'GET') {
     }
 
     if ($post_group_name != 'all') {
-        $query2 = "select * from groups where groupname = '" . $post_group_name . "'";
+        $query2 = "select * from `groups` where groupname = '" . $post_group_name . "'";
         $result2 = mysqli_query($db, $query2);
         while ($row2 = mysqli_fetch_array($result2)) {
             $groupname = "" . $row2['groupname'] . "";
@@ -2323,7 +2323,7 @@ if ($request == 'GET') {
             echo "                     <td bgcolor='$row_color' class=table_rows width=10% align=left valign=top>
                              <select name='group_name'>
                           <option value = 'all'>all</option>\n";
-            $query = "select DISTINCT(groupname) from groups order by groupname asc";
+            $query = "select DISTINCT(groupname) from `groups` order by groupname asc";
             $result = mysqli_query($db, $query);
 
             while ($row = mysqli_fetch_array($result)) {

@@ -256,7 +256,7 @@ if ($request == 'GET') {
     }
 
     if (!empty($group_name)) {
-        $query = "select * from " . $db_prefix . "employees where empfullname = '" . $post_username . "' and groups = '" . $group_name . "'";
+        $query = "select * from " . $db_prefix . "employees where empfullname = '" . $post_username . "' and `groups` = '" . $group_name . "'";
         $result = mysqli_query($db, $query);
         while ($row = mysqli_fetch_array($result)) {
             $tmp_group_name = "" . $row['groups'] . "";

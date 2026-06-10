@@ -58,11 +58,11 @@ End_Of_HTML;
 
 if ($punchclock_select_groups == "yes") {
     $sql = $office
-        ? "select groupname from {$db_prefix}groups"
-          . " join {$db_prefix}offices on {$db_prefix}groups.officeid = {$db_prefix}offices.officeid"
+        ? "select groupname from `{$db_prefix}groups`"
+          . " join {$db_prefix}offices on `{$db_prefix}groups`.officeid = {$db_prefix}offices.officeid"
           . " where {$db_prefix}offices.officename = '$q_office'"
           . " order by groupname"
-        : "SELECT groupname FROM {$db_prefix}groups ORDER BY groupname";
+        : "SELECT groupname FROM `{$db_prefix}groups` ORDER BY groupname";
     $select_options = select_options($sql, $group);
     $select_groups = <<<End_Of_HTML
 <select id="select_groups" onchange="location.href='?office=$u_office&amp;group='+encodeURIComponent(this.value)">

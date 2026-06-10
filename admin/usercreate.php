@@ -331,7 +331,7 @@ if ($request == 'GET') {
         }
 
         if (!empty($group_name)) {
-            $query = "select * from " . $db_prefix . "groups where groupname = '" . $group_name . "'";
+            $query = "select * from `" . $db_prefix . "groups` where groupname = '" . $group_name . "'";
             $result = mysqli_query($db, $query);
             while ($row = mysqli_fetch_array($result)) {
                 $tmp_groupname = "" . $row['groupname'] . "";
@@ -444,7 +444,7 @@ if ($request == 'GET') {
     $password = crypt($password, 'xy');
     $confirm_password = crypt($confirm_password, 'xy');
 
-    $query3 = "insert into " . $db_prefix . "employees (empfullname, displayname, employee_passwd, email, groups, office, admin, reports, time_admin, disabled)
+    $query3 = "insert into " . $db_prefix . "employees (empfullname, displayname, employee_passwd, email, `groups`, office, admin, reports, time_admin, disabled)
            values ('" . $post_username . "', '" . $display_name . "', '" . $password . "', '" . $email_addy . "', '" . $group_name . "', '" . $office_name . "', '" . $admin_perms . "',
            '" . $reports_perms . "', '" . $time_admin_perms . "', '" . $post_disabled . "')";
     $result3 = mysqli_query($db, $query3);
@@ -505,7 +505,7 @@ if ($request == 'GET') {
                 </th></tr>\n";
     echo "              <tr><td height=15></td></tr>\n";
 
-    $query4 = "select empfullname, displayname, email, groups, office, admin, reports, time_admin, disabled from " . $db_prefix . "employees
+    $query4 = "select empfullname, displayname, email, `groups`, office, admin, reports, time_admin, disabled from " . $db_prefix . "employees
 	  where empfullname = '" . $post_username . "'
           order by empfullname";
     $result4 = mysqli_query($db, $query4);

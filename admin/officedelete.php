@@ -109,7 +109,7 @@ if ($request == 'GET') {
     $result2 = mysqli_query($db, $query2);
     @$user_cnt = mysqli_num_rows($result2);
 
-    $query3 = "select * from " . $db_prefix . "groups where officeid = '" . $officeid . "'";
+    $query3 = "select * from `" . $db_prefix . "groups` where officeid = '" . $officeid . "'";
     $result3 = mysqli_query($db, $query3);
     @$group_cnt = mysqli_num_rows($result3);
 
@@ -236,7 +236,7 @@ if ($request == 'GET') {
     }
 
     if ((!empty($group_name)) && ($group_name != 'no_group_users')) {
-        $query = "select * from " . $db_prefix . "groups where groupname = '" . $group_name . "'";
+        $query = "select * from `" . $db_prefix . "groups` where groupname = '" . $group_name . "'";
         $result = mysqli_query($db, $query);
         while ($row = mysqli_fetch_array($result)) {
             $tmp_groupname = "" . $row['groupname'] . "";
@@ -253,7 +253,7 @@ if ($request == 'GET') {
     $result2 = mysqli_query($db, $query2);
     @$tmp_user_cnt = mysqli_num_rows($result2);
 
-    $query3 = "select * from " . $db_prefix . "groups where officeid = '" . $post_officeid . "'";
+    $query3 = "select * from `" . $db_prefix . "groups` where officeid = '" . $post_officeid . "'";
     $result3 = mysqli_query($db, $query3);
     @$tmp_group_cnt = mysqli_num_rows($result3);
 
@@ -400,14 +400,14 @@ if ($request == 'GET') {
     } else {
 
         if ($user_cnt > 0) {
-            $query4 = "update " . $db_prefix . "employees set office = ('" . $office_name . "'), groups = ('" . $group_name . "') where office = ('" . $post_officename . "')";
+            $query4 = "update " . $db_prefix . "employees set office = ('" . $office_name . "'), `groups` = ('" . $group_name . "') where office = ('" . $post_officename . "')";
             $result4 = mysqli_query($db, $query4);
         }
 
         $query5 = "delete from " . $db_prefix . "offices where officeid = '" . $post_officeid . "'";
         $result5 = mysqli_query($db, $query5);
 
-        $query6 = "delete from " . $db_prefix . "groups where officeid = '" . $post_officeid . "'";
+        $query6 = "delete from `" . $db_prefix . "groups` where officeid = '" . $post_officeid . "'";
         $result6 = mysqli_query($db, $query6);
 
         echo "              <tr><td class=table_rows height=25 width=20% style='padding-left:32px;' nowrap>Office Name:</td><td align=left class=table_rows

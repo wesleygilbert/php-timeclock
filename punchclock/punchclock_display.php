@@ -14,7 +14,7 @@ $sortdirection = 'asc';
 
 // Construct query
 $office_clause = $display_office == 'all' ? '' : "   and {$db_prefix}employees.office = '" . mysql_real_escape_string($display_office) . "'\n";
-$groups_clause = $display_group == 'all' ? '' : "   and {$db_prefix}employees.groups = '" . mysql_real_escape_string($display_group) . "'\n";
+$groups_clause = $display_group == 'all' ? '' : "   and {$db_prefix}employees.`groups` = '" . mysql_real_escape_string($display_group) . "'\n";
 
 $query = <<<End_Of_SQL
 select {$db_prefix}employees.*, {$db_prefix}info.*, {$db_prefix}punchlist.*

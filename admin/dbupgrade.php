@@ -195,7 +195,7 @@ if (!empty($count)) {
         @$rows = mysqli_num_rows($result);
 
         if (empty($rows)) {
-            $passwd_query = mysqli_query($db, "ALTER TABLE " . $db_prefix . "employees ADD $field VARCHAR(50) NOT NULL;");
+            $passwd_query = mysqli_query($db, "ALTER TABLE " . $db_prefix . "employees ADD `groups` VARCHAR(50) NOT NULL;");
             echo "              <tr><td width=10 class=table_rows style='padding-left:25px;color:#FF9900;font-weight:bold;'>Added</td><td class=table_rows
                       align=left>:&nbsp;<b>$field</b> field has been added to the <u>employees</u> table.</td></tr>\n";
             $passed_or_not = "1";
@@ -217,7 +217,7 @@ if (!empty($count)) {
         @$rows = mysqli_num_rows($result);
 
         if (empty($rows)) {
-            $passwd_query = mysqli_query($db, "ALTER TABLE " . $db_prefix . "employees ADD $field TINYINT(1) NOT NULL default '0';");
+            $passwd_query = mysqli_query($db, "ALTER TABLE " . $db_prefix . "employees ADD $field TINYINT NOT NULL default '0';");
             echo "              <tr><td width=10 class=table_rows style='padding-left:25px;color:#FF9900;font-weight:bold;'>Added</td><td class=table_rows
                       align=left>:&nbsp;<b>$field</b> field has been added to the <u>employees</u> table.</td></tr>\n";
             $passed_or_not = "1";
@@ -228,7 +228,7 @@ if (!empty($count)) {
         @$rows = mysqli_num_rows($result);
 
         if (empty($rows)) {
-            $passwd_query = mysqli_query($db, "ALTER TABLE " . $db_prefix . "employees ADD $field TINYINT(1) NOT NULL default '0';");
+            $passwd_query = mysqli_query($db, "ALTER TABLE " . $db_prefix . "employees ADD $field TINYINT NOT NULL default '0';");
             echo "              <tr><td width=10 class=table_rows style='padding-left:25px;color:#FF9900;font-weight:bold;'>Added</td><td class=table_rows
                       align=left>:&nbsp;<b>$field</b> field has been added to the <u>employees</u> table.</td></tr>\n";
             $passed_or_not = "1";
@@ -239,7 +239,7 @@ if (!empty($count)) {
         @$rows = mysqli_num_rows($result);
 
         if (empty($rows)) {
-            $passwd_query = mysqli_query($db, "ALTER TABLE " . $db_prefix . "employees ADD $field TINYINT(1) NOT NULL default '0';");
+            $passwd_query = mysqli_query($db, "ALTER TABLE " . $db_prefix . "employees ADD $field TINYINT NOT NULL default '0';");
             echo "              <tr><td width=10 class=table_rows style='padding-left:25px;color:#FF9900;font-weight:bold;'>Added</td><td class=table_rows
                       align=left>:&nbsp;<b>$field</b> field has been added to the <u>employees</u> table.</td></tr>\n";
             $passed_or_not = "1";
@@ -250,7 +250,7 @@ if (!empty($count)) {
         @$rows = mysqli_num_rows($result);
 
         if (empty($rows)) {
-            $passwd_query = mysqli_query($db, "ALTER TABLE " . $db_prefix . "employees ADD $field TINYINT(1) NOT NULL default '0';");
+            $passwd_query = mysqli_query($db, "ALTER TABLE " . $db_prefix . "employees ADD $field TINYINT NOT NULL default '0';");
             echo "              <tr><td width=10 class=table_rows style='padding-left:25px;color:#FF9900;font-weight:bold;'>Added</td><td class=table_rows
                       align=left>:&nbsp;<b>$field</b> field has been added to the <u>employees</u> table.</td></tr>\n";
             $passed_or_not = "1";
@@ -270,10 +270,10 @@ if (!empty($count)) {
                       align=left>:&nbsp;<b>$name</b> field in <u>employees</u> table has been changed from type $tmp_type to type VARCHAR(50).</td></tr>\n";
                 $passed_or_not = "1";
             }
-            if (($name == 'tstamp') && ($type != 'bigint(14)')) {
-                $alter_result = mysqli_query($db, "ALTER TABLE " . $db_prefix . "employees CHANGE tstamp tstamp BIGINT(14) DEFAULT NULL");
+            if (($name == 'tstamp') && (strtolower($type) != 'bigint')) {
+                $alter_result = mysqli_query($db, "ALTER TABLE " . $db_prefix . "employees CHANGE tstamp tstamp BIGINT DEFAULT NULL");
                 echo "              <tr><td width=10 class=table_rows style='padding-left:25px;color:#0000FF;font-weight:bold;'>Changed</td><td class=table_rows
-                      align=left>:&nbsp;<b>$name</b> field in <u>employees</u> table has been changed from type $tmp_type to type BIGINT(14).</td></tr>\n";
+                      align=left>:&nbsp;<b>$name</b> field in <u>employees</u> table has been changed from type $tmp_type to type BIGINT.</td></tr>\n";
                 $emp_tstamp_count++;
                 $passed_or_not = "1";
             }
@@ -307,10 +307,10 @@ if (!empty($count)) {
                       align=left>:&nbsp;<b>$name</b> field in <u>info</u> table has been changed from type $tmp_type to type VARCHAR(50).</td></tr>\n";
                 $passed_or_not = "1";
             }
-            if (($name == 'timestamp') && ($type != 'bigint(14)')) {
-                $alter_result = mysqli_query($db, "ALTER TABLE " . $db_prefix . "info CHANGE timestamp timestamp BIGINT(14) DEFAULT NULL");
+            if (($name == 'timestamp') && (strtolower($type) != 'bigint')) {
+                $alter_result = mysqli_query($db, "ALTER TABLE " . $db_prefix . "info CHANGE timestamp timestamp BIGINT DEFAULT NULL");
                 echo "              <tr><td width=10 class=table_rows style='padding-left:25px;color:#0000FF;font-weight:bold;'>Changed</td><td class=table_rows
-                      align=left>:&nbsp;<b>$name</b> field in <u>info</u> table has been changed from type $tmp_type to type BIGINT(14).</td></tr>\n";
+                      align=left>:&nbsp;<b>$name</b> field in <u>info</u> table has been changed from type $tmp_type to type BIGINT.</td></tr>\n";
                 $info_timestamp_count++;
                 $passed_or_not = "1";
             }
@@ -324,7 +324,7 @@ if (!empty($count)) {
         $rows = mysqli_num_rows($result);
 
         if (empty($rows)) {
-            $passwd_query = mysqli_query($db, "ALTER TABLE " . $db_prefix . "punchlist ADD $field TINYINT(1) NOT NULL default '0';");
+            $passwd_query = mysqli_query($db, "ALTER TABLE " . $db_prefix . "punchlist ADD $field TINYINT NOT NULL default '0';");
             echo "              <tr><td width=10 class=table_rows style='padding-left:25px;color:#FF9900;font-weight:bold;'>Added</td><td class=table_rows
                       align=left>:&nbsp;<b>$field</b> field has been added to the <u>punchlist</u> table.</td></tr>\n";
             $passed_or_not = "1";
@@ -355,8 +355,8 @@ if (!empty($count)) {
 
         if (empty($rows)) {
             $metars_query = mysqli_query($db, "CREATE TABLE " . $db_prefix . "metars (metar varchar(255) NOT NULL default '',
-                             timestamp timestamp(14) NOT NULL, station varchar(4) NOT NULL default '',
-                             PRIMARY KEY  (station), UNIQUE KEY station (station)) TYPE=MyISAM;");
+                             timestamp timestamp NOT NULL, station varchar(4) NOT NULL default '',
+                             PRIMARY KEY  (station), UNIQUE KEY station (station)) ENGINE=MyISAM;");
             echo "              <tr><td width=10 class=table_rows style='padding-left:25px;color:#FF9900;font-weight:bold;'>Added</td><td class=table_rows
                       align=left>:&nbsp;<b>$table</b> table has been added to the <u>$db_name</u> database.</td></tr>\n";
             $passed_or_not = "1";
@@ -370,7 +370,7 @@ if (!empty($count)) {
 
         if (empty($rows)) {
             $dbversion_query = mysqli_query($db, "CREATE TABLE " . $db_prefix . "dbversion (dbversion decimal(5,1) NOT NULL default '0.0',
-                             PRIMARY KEY  (dbversion)) TYPE=MyISAM;");
+                             PRIMARY KEY  (dbversion)) ENGINE=MyISAM;");
             echo "              <tr><td width=10 class=table_rows style='padding-left:25px;color:#FF9900;font-weight:bold;'>Added</td><td class=table_rows
                       align=left>:&nbsp;<b>$table</b> table has been added to the <u>$db_name</u> database.</td></tr>\n";
             $passed_or_not = "1";
@@ -393,7 +393,7 @@ if (!empty($count)) {
                           align=left>:&nbsp;the version of the database is $dbversion.</td></tr>\n";
                 $passed_or_not = "1";
             } elseif (@$tmp_dbversion != $dbversion) {
-                $update_query = "update dbversion set " . $db_prefix . "dbversion = '" . $dbversion . "'";
+                $update_query = "update " . $db_prefix . "dbversion set dbversion = '" . $dbversion . "'";
                 $update_result = mysqli_query($db, $update_query);
                 echo "                  <tr><td width=10 class=table_rows style='padding-left:25px;color:#0000FF;font-weight:bold;'>Changed</td><td class=table_rows
                           align=left>:&nbsp;the version of the database has been changed from <b>$tmp_dbversion</b> to <b>$dbversion</b>.</td></tr>\n";
@@ -409,8 +409,8 @@ if (!empty($count)) {
 
         if (empty($rows)) {
             $metars_query = mysqli_query($db, "CREATE TABLE " . $db_prefix . "offices (officename varchar(50) NOT NULL default '',
-                             officeid int(10) NOT NULL auto_increment,
-                             PRIMARY KEY  (officeid), UNIQUE KEY officeid (officeid)) TYPE=MyISAM;");
+                             officeid int NOT NULL auto_increment,
+                             PRIMARY KEY  (officeid), UNIQUE KEY officeid (officeid)) ENGINE=MyISAM;");
             echo "              <tr><td width=10 class=table_rows style='padding-left:25px;color:#FF9900;font-weight:bold;'>Added</td><td class=table_rows
                       align=left>:&nbsp;<b>$table</b> table has been added to the <u>$db_name</u> database.</td></tr>\n";
             $passed_or_not = "1";
@@ -423,10 +423,10 @@ if (!empty($count)) {
         $rows = mysqli_num_rows($result);
 
         if (empty($rows)) {
-            $metars_query = mysqli_query($db, "CREATE TABLE " . $db_prefix . "groups (groupname varchar(50) NOT NULL default '',
-                             groupid int(10) NOT NULL auto_increment,
-                             officeid int(10) NOT NULL default '0',
-                             PRIMARY KEY  (groupid), UNIQUE KEY groupid (groupid)) TYPE=MyISAM;");
+            $metars_query = mysqli_query($db, "CREATE TABLE `" . $db_prefix . "groups` (groupname varchar(50) NOT NULL default '',
+                             groupid int NOT NULL auto_increment,
+                             officeid int NOT NULL default '0',
+                             PRIMARY KEY  (groupid), UNIQUE KEY groupid (groupid)) ENGINE=MyISAM;");
             echo "              <tr><td width=10 class=table_rows style='padding-left:25px;color:#FF9900;font-weight:bold;'>Added</td><td class=table_rows
                       align=left>:&nbsp;<b>$table</b> table has been added to the <u>$db_name</u> database.</td></tr>\n";
             $passed_or_not = "1";
@@ -441,10 +441,10 @@ if (!empty($count)) {
         if (empty($rows)) {
             $audit_query = mysqli_query($db, "CREATE TABLE " . $db_prefix . "audit (modified_by_ip varchar(39) NOT NULL default '',
                              modified_by_user varchar(50) NOT NULL default '',
-                             modified_when bigint(14) NOT NULL, modified_from bigint(14) NOT NULL, 
-                             modified_to bigint(14) NOT NULL, modified_why varchar(250) NOT NULL default '',
+                             modified_when bigint NOT NULL, modified_from bigint NOT NULL,
+                             modified_to bigint NOT NULL, modified_why varchar(250) NOT NULL default '',
                              user_modified varchar(50) NOT NULL,
-                             PRIMARY KEY  (modified_when), UNIQUE KEY modified_when (modified_when)) TYPE=MyISAM;");
+                             PRIMARY KEY  (modified_when), UNIQUE KEY modified_when (modified_when)) ENGINE=MyISAM;");
             echo "              <tr><td width=10 class=table_rows style='padding-left:25px;color:#FF9900;font-weight:bold;'>Added</td><td class=table_rows
                       align=left>:&nbsp;<b>$table</b> table has been added to the <u>$db_name</u> database.</td></tr>\n";
             $passed_or_not = "1";

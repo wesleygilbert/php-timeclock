@@ -50,9 +50,9 @@
           ?>
         if (offices_select.options[offices_select.selectedIndex].text == "<?php echo $office_row; ?>") {
             <?php
-                $query2 = "select * from ".$db_prefix."offices, ".$db_prefix."groups where ".$db_prefix."groups.officeid = ".$db_prefix."offices.officeid
+                $query2 = "select * from ".$db_prefix."offices, `" . $db_prefix . "groups` where `" . $db_prefix . "groups`.officeid = ".$db_prefix."offices.officeid
                            and ".$db_prefix."offices.officename = '".$office_row."'
-                           order by ".$db_prefix."groups.groupname asc";
+                           order by `" . $db_prefix . "groups`.groupname asc";
                 $result2 = mysqli_query($db, $query2);
                 echo "groups_select.options[0] = new Option(\"All\");\n";
                 echo "groups_select.options[0].value = 'All';\n";
@@ -111,9 +111,9 @@
         ?>
         if (offices_select.options[offices_select.selectedIndex].text == "<?php echo $office_row; ?>") {
             <?php
-            $query2 = "select * from ".$db_prefix."offices, ".$db_prefix."groups where ".$db_prefix."groups.officeid = ".$db_prefix."offices.officeid
+            $query2 = "select * from ".$db_prefix."offices, `" . $db_prefix . "groups` where `" . $db_prefix . "groups`.officeid = ".$db_prefix."offices.officeid
                        and ".$db_prefix."offices.officename = '".$office_row."'
-                       order by ".$db_prefix."groups.groupname asc";
+                       order by `" . $db_prefix . "groups`.groupname asc";
             $result2 = mysqli_query($db, $query2);
 
             while ($row2=mysqli_fetch_array($result2)) {
@@ -122,7 +122,7 @@
 
             if (groups_select.options[groups_select.selectedIndex].text == "<?php echo $groups; ?>") {
                 <?php
-                $query3 = "select * from ".$db_prefix."employees where office = '".$office_row."' and groups = '".$groups."'  and empfullname <> 'admin'
+                $query3 = "select * from ".$db_prefix."employees where office = '".$office_row."' and `groups` = '".$groups."'  and empfullname <> 'admin'
                            order by empfullname asc";
                 $result3 = mysqli_query($db, $query3);
 

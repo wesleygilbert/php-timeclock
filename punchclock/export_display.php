@@ -19,7 +19,7 @@ $end_utm_timestamp = utm_timestamp($end_local_timestamp);
 
 $employee_clause = $user_name == 'All' ? '' : "   and {$db_prefix}employees.empfullname = '" . mysql_real_escape_string($user_name) . "'\n";
 $office_clause = $office_name == 'All' ? '' : "   and {$db_prefix}employees.office = '" . mysql_real_escape_string($office_name) . "'\n";
-$groups_clause = $group_name == 'All' ? '' : "   and {$db_prefix}employees.groups = '" . mysql_real_escape_string($group_name) . "'\n";
+$groups_clause = $group_name == 'All' ? '' : "   and {$db_prefix}employees.`groups` = '" . mysql_real_escape_string($group_name) . "'\n";
 
 // Select employees whose timecards need to be scanned.
 $query = <<<End_Of_SQL
@@ -60,7 +60,7 @@ $cols = '';
 if ($c_office)
     $cols .= ",office";
 if ($c_group)
-    $cols .= ",groups";
+    $cols .= ",`groups`";
 if ($c_employee)
     $cols .= ",empfullname";
 if ($c_name)
@@ -250,7 +250,7 @@ create temporary table t_computed_hours (
   `hours_date` varchar(16),
   `empfullname` varchar(50),
   `displayname` varchar(50),
-  `groups` varchar(50),
+  `groups`          VARCHAR(50),
   `office` varchar(50)
 )
 End_Of_SQL;
@@ -297,7 +297,7 @@ function record_hours($tc) {
             #$date        = date('Y-m-d H:i',$start_time); ## debug
             $date = date('Y-m-d', $start_time);
             $sql = <<<End_Of_SQL
-insert into t_computed_hours (hours,reg_ot,`inout`,color,hours_date,empfullname,displayname,groups,office)
+insert into t_computed_hours (hours,reg_ot,`inout`,color,hours_date,empfullname,displayname,`groups`,office)
 values ($hours,'$reg_ot','$q_inout','$q_color','$date','$q_employee','$q_name','$q_group','$q_office')
 End_Of_SQL;
             mysqli_query($db, $sql)
@@ -315,7 +315,7 @@ End_Of_SQL;
             #$date        = date('Y-m-d H:i',$start_time); ## debug
             $date = date('Y-m-d', $start_time);
             $sql = <<<End_Of_SQL
-insert into t_computed_hours (hours,reg_ot,`inout`,color,hours_date,empfullname,displayname,groups,office)
+insert into t_computed_hours (hours,reg_ot,`inout`,color,hours_date,empfullname,displayname,`groups`,office)
 values ($overtime,'$reg_ot','$q_inout','$q_color','$date','$q_employee','$q_name','$q_group','$q_office')
 End_Of_SQL;
             mysqli_query($db, $sql)

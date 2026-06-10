@@ -95,7 +95,7 @@ if ($request == 'GET') {
     echo "          <td valign=top>\n";
     echo "            <br />\n";
 
-    $query = "select * from " . $db_prefix . "groups, " . $db_prefix . "offices where officename = '" . $get_office . "' and groupname = '" . $get_group . "'";
+    $query = "select * from `" . $db_prefix . "groups`, " . $db_prefix . "offices where officename = '" . $get_office . "' and groupname = '" . $get_group . "'";
     $result = mysqli_query($db, $query);
 
     while ($row = mysqli_fetch_array($result)) {
@@ -115,7 +115,7 @@ if ($request == 'GET') {
         exit;
     }
 
-    $query2 = "select * from " . $db_prefix . "employees where office = '" . $get_office . "' and groups = '" . $get_group . "'";
+    $query2 = "select * from " . $db_prefix . "employees where office = '" . $get_office . "' and `groups` = '" . $get_group . "'";
     $result2 = mysqli_query($db, $query2);
     @$user_cnt = mysqli_num_rows($result2);
 
@@ -207,7 +207,7 @@ if ($request == 'GET') {
     }
 
     if ((!empty($post_groupname)) || (!empty($post_groupid)) || ($group_name != 'no_group_users')) {
-        $query = "select * from " . $db_prefix . "groups where groupname = '" . $post_groupname . "' and groupid = '" . $post_groupid . "'";
+        $query = "select * from `" . $db_prefix . "groups` where groupname = '" . $post_groupname . "' and groupid = '" . $post_groupid . "'";
         $result = mysqli_query($db, $query);
         while ($row = mysqli_fetch_array($result)) {
             $groupname = "" . $row['groupname'] . "";
@@ -235,7 +235,7 @@ if ($request == 'GET') {
     }
 
     if (!empty($group_name)) {
-        $query = "select * from " . $db_prefix . "groups where groupname = '" . $group_name . "'";
+        $query = "select * from `" . $db_prefix . "groups` where groupname = '" . $group_name . "'";
         $result = mysqli_query($db, $query);
         while ($row = mysqli_fetch_array($result)) {
             $tmp_groupname = "" . $row['groupname'] . "";
@@ -261,7 +261,7 @@ if ($request == 'GET') {
         }
     }
 
-    $query = "select * from " . $db_prefix . "employees where office = '" . $post_officename . "' and groups = '" . $post_groupname . "'";
+    $query = "select * from " . $db_prefix . "employees where office = '" . $post_officename . "' and `groups` = '" . $post_groupname . "'";
     $result = mysqli_query($db, $query);
     @$tmp_user_cnt = mysqli_num_rows($result);
 
@@ -410,12 +410,12 @@ if ($request == 'GET') {
     } else {
 
         if ($user_cnt > '0') {
-            $query4 = "update " . $db_prefix . "employees set office = ('" . $office_name . "'), groups = ('" . $group_name . "') where office = ('" . $post_officename . "')
-           and groups = ('" . $post_groupname . "')";
+            $query4 = "update " . $db_prefix . "employees set office = ('" . $office_name . "'), `groups` = ('" . $group_name . "') where office = ('" . $post_officename . "')
+           and `groups` = ('" . $post_groupname . "')";
             $result4 = mysqli_query($db, $query4);
         }
 
-        $query5 = "delete from " . $db_prefix . "groups where groupid = '" . $post_groupid . "'";
+        $query5 = "delete from `" . $db_prefix . "groups` where groupid = '" . $post_groupid . "'";
         $result5 = mysqli_query($db, $query5);
 
         echo "              <tr><td class=table_rows height=25 width=20% style='padding-left:32px;' nowrap>Group Name:</td><td align=left width=80%

@@ -172,7 +172,7 @@ if ($request == 'GET') {
         }
     }
     if (($group_name != "All") && (!empty($group_name))) {
-        $query = "select groupname from " . $db_prefix . "groups where groupname = '" . $group_name . "'";
+        $query = "select groupname from `" . $db_prefix . "groups` where groupname = '" . $group_name . "'";
         $result = mysqli_query($db, $query);
         while ($row = mysqli_fetch_array($result)) {
             $getgroup = "" . $row['groupname'] . "";
@@ -598,13 +598,13 @@ if ($request == 'GET') {
 
         } elseif (($office_name != "All") && ($group_name != "All") && ($fullname == "All")) {
 
-            $query = "select empfullname, displayname from " . $db_prefix . "employees where office = '" . $office_name . "' and groups = '" . $group_name . "'  and
+            $query = "select empfullname, displayname from " . $db_prefix . "employees where office = '" . $office_name . "' and `groups` = '" . $group_name . "'  and
                   tstamp IS NOT NULL order by displayname asc";
             $result = mysqli_query($db, $query);
 
         } elseif (($office_name != "All") && ($group_name != "All") && ($fullname != "All")) {
 
-            $query = "select empfullname, displayname from " . $db_prefix . "employees where office = '" . $office_name . "' and groups = '" . $group_name . "' and
+            $query = "select empfullname, displayname from " . $db_prefix . "employees where office = '" . $office_name . "' and `groups` = '" . $group_name . "' and
                   empfullname = '" . $fullname . "' and tstamp IS NOT NULL order by displayname asc";
             $result = mysqli_query($db, $query);
         }
@@ -635,13 +635,13 @@ if ($request == 'GET') {
 
         } elseif (($office_name != "All") && ($group_name != "All") && ($fullname == "All")) {
 
-            $query = "select empfullname, displayname from " . $db_prefix . "employees where office = '" . $office_name . "' and groups = '" . $group_name . "'  and
+            $query = "select empfullname, displayname from " . $db_prefix . "employees where office = '" . $office_name . "' and `groups` = '" . $group_name . "'  and
                   tstamp IS NOT NULL order by empfullname asc";
             $result = mysqli_query($db, $query);
 
         } elseif (($office_name != "All") && ($group_name != "All") && ($fullname != "All")) {
 
-            $query = "select empfullname, displayname from " . $db_prefix . "employees where office = '" . $office_name . "' and groups = '" . $group_name . "' and
+            $query = "select empfullname, displayname from " . $db_prefix . "employees where office = '" . $office_name . "' and `groups` = '" . $group_name . "' and
                   empfullname = '" . $fullname . "' and tstamp IS NOT NULL order by empfullname asc";
             $result = mysqli_query($db, $query);
         }
