@@ -52,6 +52,8 @@ ALTER TABLE `employees` ADD `disabled` TINYINT NOT NULL DEFAULT '0';
 ALTER TABLE `employees` ADD `first_name` VARCHAR(50) NOT NULL DEFAULT '' AFTER `empfullname`;
 ALTER TABLE `employees` ADD `middle_name` VARCHAR(50) NOT NULL DEFAULT '' AFTER `first_name`;
 ALTER TABLE `employees` ADD `last_name` VARCHAR(50) NOT NULL DEFAULT '' AFTER `middle_name`;
+ALTER TABLE `employees` ADD `hire_date` DATE DEFAULT NULL AFTER `last_name`;
+ALTER TABLE `employees` ADD `termination_date` DATE DEFAULT NULL AFTER `hire_date`;
 UPDATE `employees`
 SET `first_name` = SUBSTRING_INDEX(`empfullname`, ' ', 1),
     `last_name` = CASE WHEN `empfullname` LIKE '% %' THEN SUBSTRING_INDEX(`empfullname`, ' ', -1) ELSE '' END
@@ -100,6 +102,8 @@ ALTER TABLE `employees` ADD `displayname` VARCHAR(50) NOT NULL DEFAULT '';
 ALTER TABLE `employees` ADD `first_name` VARCHAR(50) NOT NULL DEFAULT '' AFTER `empfullname`;
 ALTER TABLE `employees` ADD `middle_name` VARCHAR(50) NOT NULL DEFAULT '' AFTER `first_name`;
 ALTER TABLE `employees` ADD `last_name` VARCHAR(50) NOT NULL DEFAULT '' AFTER `middle_name`;
+ALTER TABLE `employees` ADD `hire_date` DATE DEFAULT NULL AFTER `last_name`;
+ALTER TABLE `employees` ADD `termination_date` DATE DEFAULT NULL AFTER `hire_date`;
 ALTER TABLE `employees` ADD `email` VARCHAR(75) NOT NULL DEFAULT '';
 ALTER TABLE `employees` ADD `groups`          VARCHAR(50) NOT NULL DEFAULT '';
 ALTER TABLE `employees` ADD `office` VARCHAR(50) NOT NULL DEFAULT '';
@@ -111,8 +115,8 @@ UPDATE `employees`
 SET `first_name` = SUBSTRING_INDEX(`empfullname`, ' ', 1),
     `last_name` = CASE WHEN `empfullname` LIKE '% %' THEN SUBSTRING_INDEX(`empfullname`, ' ', -1) ELSE '' END
 WHERE `first_name` = '' AND `middle_name` = '' AND `last_name` = '';
-INSERT INTO employees (empfullname, first_name, middle_name, last_name, tstamp, employee_passwd, displayname, email, `groups`, office, admin, reports, time_admin, disabled)
-VALUES ('admin', 'admin', '', '', NULL, 'xy.RY2HT1QTc2', 'administrator', '', '', '', 1, 1, 1, 0);
+INSERT INTO employees (empfullname, first_name, middle_name, last_name, hire_date, termination_date, tstamp, employee_passwd, displayname, email, `groups`, office, admin, reports, time_admin, disabled)
+VALUES ('admin', 'admin', '', '', NULL, NULL, NULL, 'xy.RY2HT1QTc2', 'administrator', '', '', '', 1, 1, 1, 0);
 
 # --------------------------------------------------------
 

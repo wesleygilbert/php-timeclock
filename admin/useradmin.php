@@ -95,6 +95,8 @@ echo "              <tr>\n";
 echo "                <th class=table_heading nowrap width=3% align=left>&nbsp;</th>\n";
 echo "                <th class=table_heading nowrap width=13% align=left>Name</th>\n";
 echo "                <th class=table_heading nowrap width=18% align=left>Display Name</th>\n";
+echo "                <th class=table_heading nowrap width=10% align=left>Hire Date</th>\n";
+echo "                <th class=table_heading nowrap width=10% align=left>Termination Date</th>\n";
 //echo "                <th class=table_heading nowrap width=23% align=left>Email Address</th>\n";
 echo "                <th class=table_heading nowrap width=10% align=left>Office</th>\n";
 echo "                <th class=table_heading nowrap width=10% align=left>Group</th>\n";
@@ -109,7 +111,7 @@ echo "              </tr>\n";
 
 $row_count = 0;
 
-$query = "select empfullname, first_name, middle_name, last_name, displayname, email, `groups`, office, admin, reports, time_admin, disabled from " . $db_prefix . "employees
+$query = "select empfullname, first_name, middle_name, last_name, hire_date, termination_date, displayname, email, `groups`, office, admin, reports, time_admin, disabled from " . $db_prefix . "employees
           order by empfullname";
 $result = mysqli_query($db, $query);
 
@@ -118,6 +120,8 @@ while ($row = mysqli_fetch_array($result)) {
 $empfullname = stripslashes("" . $row['empfullname'] . "");
 $employee_name = stripslashes(employee_name_from_row($row));
 $displayname = stripslashes("" . $row['displayname'] . "");
+$hire_date = "" . $row['hire_date'] . "";
+$termination_date = "" . $row['termination_date'] . "";
 
 $row_count++;
 $row_color = ($row_count % 2) ? $color2 : $color1;
@@ -126,6 +130,8 @@ echo "              <tr class=table_border bgcolor='$row_color'><td nowrap class
 echo "                <td class=table_rows nowrap width=13%>&nbsp;<a title=\"Edit User: $empfullname\" class=footer_links 
                     href=\"useredit.php?username=$empfullname&officename=" . $row["office"] . "\">$employee_name</a></td>\n";
 echo "                <td class=table_rows nowrap width=18%>&nbsp;$displayname</td>\n";
+echo "                <td class=table_rows nowrap width=10%>&nbsp;$hire_date</td>\n";
+echo "                <td class=table_rows nowrap width=10%>&nbsp;$termination_date</td>\n";
 //echo "                <td class=table_rows nowrap width=23%>&nbsp;".$row["email"]."</td>\n";
 echo "
 <td class=table_rows nowrap width=10%>&nbsp;".$row['office']."</td>\n";

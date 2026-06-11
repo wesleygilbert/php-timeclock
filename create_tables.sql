@@ -47,6 +47,8 @@ CREATE TABLE employees (
   first_name      VARCHAR(50) NOT NULL DEFAULT '',
   middle_name     VARCHAR(50) NOT NULL DEFAULT '',
   last_name       VARCHAR(50) NOT NULL DEFAULT '',
+  hire_date       DATE DEFAULT NULL,
+  termination_date DATE DEFAULT NULL,
   tstamp          BIGINT DEFAULT NULL,
   employee_passwd VARCHAR(25) NOT NULL DEFAULT '',
   displayname     VARCHAR(50) NOT NULL DEFAULT '',
@@ -65,8 +67,8 @@ CREATE TABLE employees (
 # Dumping data for table `employees`
 #
 
-INSERT INTO employees (empfullname, first_name, middle_name, last_name, tstamp, employee_passwd, displayname, email, `groups`, office, admin, reports, time_admin, disabled)
-VALUES ('admin', 'admin', '', '', NULL, 'xy.RY2HT1QTc2', 'administrator', '', '', '', 1, 1, 1, 0);
+INSERT INTO employees (empfullname, first_name, middle_name, last_name, hire_date, termination_date, tstamp, employee_passwd, displayname, email, `groups`, office, admin, reports, time_admin, disabled)
+VALUES ('admin', 'admin', '', '', NULL, NULL, NULL, 'xy.RY2HT1QTc2', 'administrator', '', '', '', 1, 1, 1, 0);
 
 # --------------------------------------------------------
 

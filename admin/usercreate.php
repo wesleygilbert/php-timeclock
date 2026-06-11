@@ -86,6 +86,12 @@ if ($request == 'GET') {
     echo "              <tr><td class=table_rows height=25 width=20% style='padding-left:32px;' nowrap>Last Name:</td><td colspan=2 width=80%
                       style='color:red;font-family:Tahoma;font-size:10px;padding-left:20px;'>
                       <input type='text' size='25' maxlength='50' name='last_name'>&nbsp;*</td></tr>\n";
+    echo "              <tr><td class=table_rows height=25 width=20% style='padding-left:32px;' nowrap>Hire Date:</td><td colspan=2 width=80%
+                      style='font-family:Tahoma;font-size:10px;padding-left:20px;'>
+                      <input type='text' size='25' maxlength='10' name='hire_date'></td></tr>\n";
+    echo "              <tr><td class=table_rows height=25 width=20% style='padding-left:32px;' nowrap>Termination Date:</td><td colspan=2 width=80%
+                      style='font-family:Tahoma;font-size:10px;padding-left:20px;'>
+                      <input type='text' size='25' maxlength='10' name='termination_date'></td></tr>\n";
     echo "              <tr><td class=table_rows height=25 width=20% style='padding-left:32px;' nowrap>Display Name:</td><td colspan=2 width=80%
                       style='color:red;font-family:Tahoma;font-size:10px;padding-left:20px;'>
                       <input type='text' size='25' maxlength='50' name='display_name'>&nbsp;*</td></tr>\n";
@@ -133,6 +139,8 @@ if ($request == 'GET') {
     $first_name = stripslashes($_POST['first_name']);
     $middle_name = stripslashes($_POST['middle_name']);
     $last_name = stripslashes($_POST['last_name']);
+    $hire_date = stripslashes($_POST['hire_date']);
+    $termination_date = stripslashes($_POST['termination_date']);
     $post_username = employee_full_name($first_name, $middle_name, $last_name);
     $display_name = stripslashes($_POST['display_name']);
     $password = $_POST['password'];
@@ -170,6 +178,7 @@ if ($request == 'GET') {
 
     if ((@$tmp_username == $post_username) || ($password !== $confirm_password) ||
         (!preg_match('/' . "^([[:alnum:]]| |-|'|,)+$" . '/i', $post_username)) || (!preg_match('/' . "^([[:alnum:]]| |-|'|,)+$" . '/i', $display_name)) || (empty($first_name)) || (empty($last_name)) ||
+        (!employee_valid_date($hire_date)) || (!employee_valid_date($termination_date)) ||
         (empty($display_name)) || (empty($email_addy)) || (empty($office_name)) || (empty($group_name)) ||
         (!preg_match('/' . "^([[:alnum:]]|~|\!|@|#|\$|%|\^|&|\*|\(|\)|-|\+|`|_|\=|[{]|[}]|\[|\]|\||\:|\<|\>|\.|,|\?)+$" . '/i', $password)) ||
         (!preg_match('/' . "^([[:alnum:]]|_|\.|-)+@([[:alnum:]]|\.|-)+(\.)([a-z]{2,4})$" . '/i', $email_addy)) || (($admin_perms != '1') && (!empty($admin_perms))) ||
@@ -245,6 +254,18 @@ if ($request == 'GET') {
             echo "              <tr>\n";
             echo "                <td class=table_rows width=20 align=center><img src='../images/icons/cancel.png' /></td><td class=table_rows_red>
                     A Display Name is required.</td></tr>\n";
+            echo "            </table>\n";
+        } elseif (!employee_valid_date($hire_date)) {
+            echo "            <table align=center class=table_border width=60% border=0 cellpadding=0 cellspacing=3>\n";
+            echo "              <tr>\n";
+            echo "                <td class=table_rows width=20 align=center><img src='../images/icons/cancel.png' /></td><td class=table_rows_red>
+                    Hire Date must be blank or use YYYY-MM-DD format.</td></tr>\n";
+            echo "            </table>\n";
+        } elseif (!employee_valid_date($termination_date)) {
+            echo "            <table align=center class=table_border width=60% border=0 cellpadding=0 cellspacing=3>\n";
+            echo "              <tr>\n";
+            echo "                <td class=table_rows width=20 align=center><img src='../images/icons/cancel.png' /></td><td class=table_rows_red>
+                    Termination Date must be blank or use YYYY-MM-DD format.</td></tr>\n";
             echo "            </table>\n";
         } elseif (!empty($string)) {
             echo "            <table align=center class=table_border width=60% border=0 cellpadding=0 cellspacing=3>\n";
@@ -393,6 +414,12 @@ if ($request == 'GET') {
         echo "              <tr><td class=table_rows height=25 width=20% style='padding-left:32px;' nowrap>Last Name:</td><td colspan=2 width=80%
                       style='color:red;font-family:Tahoma;font-size:11px;padding-left:20px;'>
                       <input type='text' size='25' maxlength='50' name='last_name' value=\"$last_name\">&nbsp;*</td></tr>\n";
+        echo "              <tr><td class=table_rows height=25 width=20% style='padding-left:32px;' nowrap>Hire Date:</td><td colspan=2 width=80%
+                      style='font-family:Tahoma;font-size:11px;padding-left:20px;'>
+                      <input type='text' size='25' maxlength='10' name='hire_date' value=\"$hire_date\"></td></tr>\n";
+        echo "              <tr><td class=table_rows height=25 width=20% style='padding-left:32px;' nowrap>Termination Date:</td><td colspan=2 width=80%
+                      style='font-family:Tahoma;font-size:11px;padding-left:20px;'>
+                      <input type='text' size='25' maxlength='10' name='termination_date' value=\"$termination_date\"></td></tr>\n";
         echo "              <tr><td class=table_rows height=25 width=20% style='padding-left:32px;' nowrap>Display Name:</td><td colspan=2 width=80%
                       style='color:red;font-family:Tahoma;font-size:11px;padding-left:20px;'>
                       <input type='text' size='25' maxlength='50' name='display_name' value=\"$display_name\">&nbsp;*</td></tr>\n";
@@ -477,9 +504,11 @@ if ($request == 'GET') {
 
     $password = crypt($password, 'xy');
     $confirm_password = crypt($confirm_password, 'xy');
+    $hire_date_sql = employee_sql_date($hire_date);
+    $termination_date_sql = employee_sql_date($termination_date);
 
-    $query3 = "insert into " . $db_prefix . "employees (empfullname, first_name, middle_name, last_name, displayname, employee_passwd, email, `groups`, office, admin, reports, time_admin, disabled)
-           values ('" . $post_username . "', '" . $first_name . "', '" . $middle_name . "', '" . $last_name . "', '" . $display_name . "', '" . $password . "', '" . $email_addy . "', '" . $group_name . "', '" . $office_name . "', '" . $admin_perms . "',
+    $query3 = "insert into " . $db_prefix . "employees (empfullname, first_name, middle_name, last_name, hire_date, termination_date, displayname, employee_passwd, email, `groups`, office, admin, reports, time_admin, disabled)
+           values ('" . $post_username . "', '" . $first_name . "', '" . $middle_name . "', '" . $last_name . "', " . $hire_date_sql . ", " . $termination_date_sql . ", '" . $display_name . "', '" . $password . "', '" . $email_addy . "', '" . $group_name . "', '" . $office_name . "', '" . $admin_perms . "',
            '" . $reports_perms . "', '" . $time_admin_perms . "', '" . $post_disabled . "')";
     $result3 = mysqli_query($db, $query3);
 
@@ -539,7 +568,7 @@ if ($request == 'GET') {
                 </th></tr>\n";
     echo "              <tr><td height=15></td></tr>\n";
 
-    $query4 = "select empfullname, first_name, middle_name, last_name, displayname, email, `groups`, office, admin, reports, time_admin, disabled from " . $db_prefix . "employees
+    $query4 = "select empfullname, first_name, middle_name, last_name, hire_date, termination_date, displayname, email, `groups`, office, admin, reports, time_admin, disabled from " . $db_prefix . "employees
 	  where empfullname = '" . $post_username . "'
           order by empfullname";
     $result4 = mysqli_query($db, $query4);
@@ -550,6 +579,8 @@ if ($request == 'GET') {
         $first_name = stripslashes("" . $row['first_name'] . "");
         $middle_name = stripslashes("" . $row['middle_name'] . "");
         $last_name = stripslashes("" . $row['last_name'] . "");
+        $hire_date = "" . $row['hire_date'] . "";
+        $termination_date = "" . $row['termination_date'] . "";
         $displayname = stripslashes("" . $row['displayname'] . "");
         $user_email = "" . $row['email'] . "";
         $office = "" . $row['office'] . "";
@@ -567,6 +598,10 @@ if ($request == 'GET') {
                       colspan=2 width=80% style='padding-left:20px;'>$middle_name</td></tr>\n";
     echo "              <tr><td class=table_rows height=25 width=20% style='padding-left:32px;' nowrap>Last Name:</td><td align=left class=table_rows
                       colspan=2 width=80% style='padding-left:20px;'>$last_name</td></tr>\n";
+    echo "              <tr><td class=table_rows height=25 width=20% style='padding-left:32px;' nowrap>Hire Date:</td><td align=left class=table_rows
+                      colspan=2 width=80% style='padding-left:20px;'>$hire_date</td></tr>\n";
+    echo "              <tr><td class=table_rows height=25 width=20% style='padding-left:32px;' nowrap>Termination Date:</td><td align=left class=table_rows
+                      colspan=2 width=80% style='padding-left:20px;'>$termination_date</td></tr>\n";
     echo "              <tr><td class=table_rows height=25 width=20% style='padding-left:32px;' nowrap>Display Name:</td><td align=left class=table_rows
                       colspan=2 width=80% style='padding-left:20px;'>$displayname</td></tr>\n";
     echo "              <tr><td class=table_rows height=25 width=20% style='padding-left:32px;' nowrap>Password:</td><td align=left class=table_rows

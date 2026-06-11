@@ -204,6 +204,23 @@ if (!empty($count)) {
                       align=left>:&nbsp;Existing employee names have been split into first, middle, and last name fields.</td></tr>\n";
         }
 
+        $employee_date_fields = array(
+            'hire_date' => "AFTER last_name",
+            'termination_date' => "AFTER hire_date"
+        );
+
+        foreach ($employee_date_fields as $field => $position) {
+            $result = mysqli_query($db, "SHOW fields from " . $db_prefix . "employees LIKE '" . $field . "'");
+            @$rows = mysqli_num_rows($result);
+
+            if (empty($rows)) {
+                $date_query = mysqli_query($db, "ALTER TABLE " . $db_prefix . "employees ADD $field DATE DEFAULT NULL " . $position . ";");
+                echo "              <tr><td width=10 class=table_rows style='padding-left:25px;color:#FF9900;font-weight:bold;'>Added</td><td class=table_rows
+                      align=left>:&nbsp;<b>$field</b> field has been added to the <u>employees</u> table.</td></tr>\n";
+                $passed_or_not = "1";
+            }
+        }
+
         $field = "displayname";
         $result = mysqli_query($db, "SHOW fields from " . $db_prefix . "employees LIKE '" . $field . "'");
         @$rows = mysqli_num_rows($result);
@@ -503,8 +520,8 @@ if (!empty($count)) {
 
                 if (!isset($admin_user)) {
                     $add_admin_query = mysqli_query($db, "INSERT INTO " . $db_prefix . "employees
-                                            (empfullname, first_name, middle_name, last_name, tstamp, employee_passwd, displayname, email, `groups`, office, admin, reports, time_admin, disabled)
-                                            VALUES ('admin', 'admin', '', '', NULL, 'xy.RY2HT1QTc2', 'administrator', '', '', '', 1, 1, 1, 0);");
+                                            (empfullname, first_name, middle_name, last_name, hire_date, termination_date, tstamp, employee_passwd, displayname, email, `groups`, office, admin, reports, time_admin, disabled)
+                                            VALUES ('admin', 'admin', '', '', NULL, NULL, NULL, 'xy.RY2HT1QTc2', 'administrator', '', '', '', 1, 1, 1, 0);");
 
                     echo "              <tr><td width=10 class=table_rows style='padding-left:25px;color:#FF9900;font-weight:bold;'>Added</td><td class=table_rows
                                   align=left>:&nbsp;<b>$admin</b> user has been added to the <u>$db_name</u> database.</td></tr>\n";

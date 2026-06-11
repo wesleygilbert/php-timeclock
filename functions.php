@@ -40,6 +40,31 @@ function employee_name_from_row($row) {
     return $full_name !== '' ? $full_name : (isset($row['empfullname']) ? $row['empfullname'] : '');
 }
 
+function employee_valid_date($date) {
+    $date = trim((string)$date);
+
+    if ($date === '') {
+        return true;
+    }
+
+    if (!preg_match('/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/', $date)) {
+        return false;
+    }
+
+    $date_parts = explode('-', $date);
+    if (count($date_parts) !== 3) {
+        return false;
+    }
+
+    return checkdate((int)$date_parts[1], (int)$date_parts[2], (int)$date_parts[0]);
+}
+
+function employee_sql_date($date) {
+    $date = trim((string)$date);
+
+    return $date === '' ? 'NULL' : "'" . addslashes($date) . "'";
+}
+
 function secsToHours($secs, $round_time) {
 
     /* The logic for this function was written by Adam Woodbeck, who initially wrote it to round to the
