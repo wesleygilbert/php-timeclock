@@ -78,18 +78,42 @@ echo "            <br />\n";
 
 // determine the privileges of the PHP Timeclock user //
 
+$required_privileges = array('SELECT', 'INSERT', 'UPDATE', 'DELETE', 'CREATE', 'ALTER');
+$granted_privileges = array();
 $result = mysqli_query($db, "show grants for current_user()");
+
 while ($row = mysqli_fetch_array($result)) {
-    $abc = stripslashes("" . $row["0"] . "");
-    if (((preg_match("/\bgrant\b/i", $abc)) && (preg_match("/\bselect\b/i", $abc)) &&
-         (preg_match("/\binsert\b/i", $abc)) && (preg_match("/\bupdate\b/i", $abc)) &&
-         (preg_match("/\bdelete\b/i", $abc)) && (preg_match("/\bcreate\b/i", $abc)) &&
-         (preg_match("/\balter\b/i", $abc)) && (preg_match("/\bon `$db_name`\.\* to '$db_username'@'$db_hostname|%\b/i", $abc))) ||
-        (preg_match("/\bgrant all privileges on `$db_name`\.\* to '$db_username'@'$db_hostname|%' \b/i", $abc)) ||
-        (preg_match("/\bgrant all privileges on \*\.\* to '$db_username'@'$db_hostname|%' \b/i", $abc))
-    ) {
-        $count++;
+    $grant = stripslashes("" . $row["0"] . "");
+
+    if (!preg_match('/^GRANT\s+(.+?)\s+ON\s+(.+?)\s+TO\s+/i', $grant, $matches)) {
+        continue;
     }
+
+    $privileges = strtoupper($matches[1]);
+    $target = str_replace('`', '', $matches[2]);
+
+    if (($target !== '*.*') && (strcasecmp($target, $db_name . '.*') !== 0)) {
+        continue;
+    }
+
+    if (preg_match('/\bALL PRIVILEGES\b/i', $privileges)) {
+        foreach ($required_privileges as $privilege) {
+            $granted_privileges[$privilege] = true;
+        }
+        break;
+    }
+
+    foreach (explode(',', $privileges) as $privilege) {
+        $privilege = trim($privilege);
+        if (in_array($privilege, $required_privileges)) {
+            $granted_privileges[$privilege] = true;
+        }
+    }
+}
+
+$missing_privileges = array_diff($required_privileges, array_keys($granted_privileges));
+if (empty($missing_privileges)) {
+    $count++;
 }
 if (!empty($count)) {
 
